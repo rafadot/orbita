@@ -1,6 +1,7 @@
 # Contexto pessoal (não compartilhado via CLAUDE.md)
 CLAUDE.local.md
 
+# Config local com segredo real (DB, JWT) — cada dev preenche o seu.
 api/src/main/resources/application-local.properties
 
 # Editores / SO

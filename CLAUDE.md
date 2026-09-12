@@ -32,7 +32,11 @@ filtrar pelo usuário autenticado.
 ## Índice de contexto
 
 - [`api/CLAUDE.md`](api/CLAUDE.md) — convenções da API; carrega ao ler algo em `api/`
+  - [`api/.../core/CLAUDE.md`](api/src/main/java/com/dot/api/orbita/core/CLAUDE.md) — núcleo (security, error, mail, config)
+  - [`api/.../auth/CLAUDE.md`](api/src/main/java/com/dot/api/orbita/auth/CLAUDE.md) — cadastro/autenticação: contrato HTTP + regras
 - [`front/CLAUDE.md`](front/CLAUDE.md) — convenções do front; carrega ao ler algo em `front/`
+- [`.claude/rules/api-codigo.md`](.claude/rules/api-codigo.md) — estilo Java (nomes, comentários, entidade/service); ao tocar `api/src/main/java/**`
+- [`.claude/rules/api-config.md`](.claude/rules/api-config.md) — properties/profile local; ao tocar `application*.properties`, `compose.yaml`, `core/config`
 - [`.claude/rules/api-migrations.md`](.claude/rules/api-migrations.md) — ao tocar `api/src/main/resources/db/**`
 - [`.claude/rules/api-tests.md`](.claude/rules/api-tests.md) — ao tocar `api/src/test/**`
 - [`.claude/rules/api-auth.md`](.claude/rules/api-auth.md) — ao tocar `api/src/main/java/**/auth/**`
@@ -43,9 +47,9 @@ filtrar pelo usuário autenticado.
 ## Comandos essenciais
 
 ```bash
-# api/
-./mvnw spring-boot:run     # sobe a API local
-./mvnw test                 # testes (Testcontainers, ver api-tests.md)
+# api/  (exige application-local.properties preenchido — ver api-config.md)
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local   # sobe a API local + Mailpit
+./mvnw verify               # testes unitários + gate JaCoCo 80% (ver api-tests.md)
 
 # front/
 npm start                   # dev server
