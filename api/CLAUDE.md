@@ -6,24 +6,26 @@ Ver visão geral e regras transversais em [`../CLAUDE.md`](../CLAUDE.md).
 
 ## Stack
 
-Spring Boot 4.1.1, Java 25, PostgreSQL, Flyway, Spring Security, Lombok,
-Bean Validation, Spring Mail. Módulo Maven único (`com.dot.api.orbita`).
-
-⚠️ `pom.xml` ainda **não tem** `spring-boot-starter-data-jpa` — adicionar na
-primeira entidade real (nenhuma entidade/repository existe ainda).
+Spring Boot 4.1.1, Java 25, PostgreSQL, Flyway, Spring Data JPA, Spring
+Security (+ `oauth2-resource-server` para JWT), Lombok, Bean Validation,
+Spring Mail, Argon2 (`bcprov-jdk18on`), JaCoCo. Módulo Maven único
+(`com.dot.api.orbita`).
 
 ## Ambiente local
 
-- Postgres em `localhost:5434`, database `orbita`.
-- Credenciais só via variável de ambiente ou `../CLAUDE.local.md` — nunca
-  hardcoded em `application.properties`. Usar `${DB_URL:...}`,
-  `${DB_USERNAME:...}`, `${DB_PASSWORD}` (sem default para senha).
+Dois arquivos: `application.properties` (base, prod-ready, só `${VAR}` sem
+default) + `application-local.properties` (gitignored, valores reais +
+Mailpit/docker-compose). Roda com profile `local`. Modelo completo, o que
+**não** fazer e checklist do local em
+[`.claude/rules/api-config.md`](../.claude/rules/api-config.md) / ADR 0006.
+Mailpit: UI em `http://localhost:8025`, exige Docker rodando.
 
 ## Comandos
 
 ```bash
-./mvnw spring-boot:run                  # dev
-./mvnw test                             # todos os testes (ver api-tests.md)
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local  # local (sobe o Mailpit via compose.yaml)
+./mvnw test                             # testes unitários (ver api-tests.md)
+./mvnw verify                           # testes + gate de cobertura JaCoCo (80%)
 ./mvnw compile -DskipTests              # validação rápida de compilação
 ```
 
@@ -33,11 +35,11 @@ Por **módulo de domínio**, não por camada global:
 
 ```
 com.dot.api.orbita/
-├── core/
-│   ├── security/      # JWT, filtros, CurrentUser
-│   ├── config/
-│   ├── error/         # GlobalExceptionHandler, ProblemDetail
-│   └── mail/
+├── core/               # ver core/CLAUDE.md — nunca importa módulo
+│   ├── security/      # JWT, SecurityConfig, UsuarioAtual, GeradorToken
+│   ├── config/        # records @ConfigurationProperties
+│   ├── error/         # ExcecaoDominio, GlobalExceptionHandler
+│   └── mail/          # EnviadorEmail (concreta), MensagemEmail
 ├── integration/
 │   └── <provedor>/    # cliente externo isolado, nunca vaza tipo pro domínio
 └── <modulo>/           # ex.: financas, saude...
@@ -53,11 +55,15 @@ diretamente — só através de um serviço exposto publicamente (interface em
 
 ## Multi-usuário (regra de negócio central)
 
-- Toda entidade de domínio tem `user_id NOT NULL` com índice.
-- `CurrentUser` (em `core/security`) é a única fonte do usuário autenticado.
-- Repositórios expõem métodos que recebem `userId` explicitamente
-  (`findByIdAndUserId`, `findAllByUserId`...) — nunca um `findById` cru
-  usado direto num endpoint.
+- Toda entidade de domínio tem `usuario_id NOT NULL` com índice. Exceção:
+  `usuarios` — ela **é** o usuário, não referencia outro.
+- `UsuarioAtual` (em `core/security`) é a única fonte do usuário autenticado
+  — lê o `sub` do JWT validado, nunca confiar em id vindo do corpo/query.
+- Repositórios expõem métodos que recebem o id do usuário explicitamente
+  (`findByIdAndUsuarioId`, `findAllByUsuarioId`...) — nunca um `findById`
+  cru usado direto num endpoint com id vindo do cliente. Excecão: buscar o
+  próprio usuário autenticado por `UsuarioAtual.id()` é seguro, porque o id
+  não vem de input do cliente (ver `AutenticacaoService.buscarUsuarioAtual`).
 
 ## Camadas
 
@@ -72,34 +78,62 @@ diretamente — só através de um serviço exposto publicamente (interface em
 ## Erros
 
 Um único `GlobalExceptionHandler` (`core/error`) traduzindo exceções de
-domínio (`NotFoundException`, `BusinessException`, etc.) para
-`ProblemDetail` (RFC 9457, nativo do Spring). Nunca stack trace cru na
-resposta.
+domínio (`ExcecaoDominio` e subclasses — `NaoEncontradoException`,
+`ConflitoException`, mais as específicas de cada módulo, ex.:
+`CredenciaisInvalidasException` em `auth`) para `ProblemDetail` (RFC 9457,
+nativo do Spring). Nunca stack trace cru na resposta.
 
 ## Segurança
 
 JWT stateless via `spring-boot-starter-oauth2-resource-server` (sem lib
 externa de JWT) — ver [`../docs/adr/0002-jwt-stateless-sem-lib-externa.md`](../docs/adr/0002-jwt-stateless-sem-lib-externa.md).
-Único grupo de endpoints público: `/auth/**`. Sem sessão, sem CSRF.
+Refresh token é opaco, hasheado no banco e rotacionado a cada uso — ver
+[`../docs/adr/0005-refresh-token-opaco-com-rotacao.md`](../docs/adr/0005-refresh-token-opaco-com-rotacao.md).
+Único grupo de endpoints público: `/auth/**`. Sem sessão, sem CSRF — o
+Sonar marca isso como hotspot de segurança (S4502); é esperado (API
+stateless sem cookie de sessão, não há CSRF a proteger) e deve ser
+revisado como "Safe" direto no SonarQube, não silenciado em código.
 
-Comportamento esperado do módulo `auth` (extraído do protótipo de design,
-que não trata de backend mas embute regras de negócio no texto das telas):
-ver [`.claude/rules/api-auth.md`](../.claude/rules/api-auth.md) e
+Módulo `auth` implementado nesta rodada: cadastro, confirmação de e-mail
+(+ reenvio com cooldown), login com bloqueio por tentativas, refresh com
+rotação, logout, `GET /me`. Contrato HTTP completo e regras não óbvias
+(ordem de checagem no login, anti-enumeração, reuso de refresh token) em
+[`auth/CLAUDE.md`](src/main/java/com/dot/api/orbita/auth/CLAUDE.md).
+Fora desta rodada (próxima): esqueci/redefinir senha, histórico de senha,
+2FA, login social — schema já não colide com eles (ver
+`api-migrations.md`). Comportamento esperado extraído do protótipo de
+design: ver [`.claude/rules/api-auth.md`](../.claude/rules/api-auth.md) e
 [`../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md`](../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md).
 
 ## Convenções de código
 
-- Lombok: só `@Getter`, `@Builder`, `@RequiredArgsConstructor`. Nunca
-  `@Data` em entidade JPA (equals/hashCode quebram com proxies/coleções).
-- Nomes de classe/método/variável em inglês; mensagens ao usuário em pt-BR.
-- Sem classes ou interfaces aninhadas públicas.
-- Migrations Flyway: ver [`.claude/rules/api-migrations.md`](../.claude/rules/api-migrations.md).
-- Testes: ver [`.claude/rules/api-tests.md`](../.claude/rules/api-tests.md).
+Resumo (regra completa e motivos em
+[`.claude/rules/api-codigo.md`](../.claude/rules/api-codigo.md), carregada ao
+tocar `api/src/main/java/**`):
+
+- Domínio em pt-BR, sufixo técnico em inglês, métodos de negócio no
+  infinitivo (`Usuario`, `AutenticacaoService`, `cadastrar`).
+- **Zero abreviação** em nomes (`duracaoTokenAcesso`, não `jwtTtl`); lambda
+  com nome completo (`caractere`, não `c`).
+- **Zero comentário `//`** em Java — nome de método bom ou javadoc curto no
+  público.
+- Entidade JPA sem regra de negócio (só booleano de consulta; mutação via
+  `@Setter` decidida pelo service). Service decomposto em passos privados
+  de uma responsabilidade. Sem interface de uma implementação só.
+- Migrations: [`api-migrations.md`](../.claude/rules/api-migrations.md)
+  (sequencial `V1`, `V2`; uma por feature). Testes:
+  [`api-tests.md`](../.claude/rules/api-tests.md).
 
 ## Ponteiros
 
-- [`../docs/adr/0001-multiusuario-desde-o-dia-1.md`](../docs/adr/0001-multiusuario-desde-o-dia-1.md)
-- [`../docs/adr/0002-jwt-stateless-sem-lib-externa.md`](../docs/adr/0002-jwt-stateless-sem-lib-externa.md)
-- [`../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md`](../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md)
-- [`.claude/rules/api-auth.md`](../.claude/rules/api-auth.md) — ao tocar `api/src/main/java/**/auth/**`
+- [`core/CLAUDE.md`](src/main/java/com/dot/api/orbita/core/CLAUDE.md) — tabela classe → o que não é óbvio
+- [`auth/CLAUDE.md`](src/main/java/com/dot/api/orbita/auth/CLAUDE.md) — contrato HTTP + regras de negócio
+- ADRs: [0001 multiusuário](../docs/adr/0001-multiusuario-desde-o-dia-1.md),
+  [0002 JWT sem lib](../docs/adr/0002-jwt-stateless-sem-lib-externa.md),
+  [0004 protótipo auth](../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md),
+  [0005 refresh token](../docs/adr/0005-refresh-token-opaco-com-rotacao.md),
+  [0006 config](../docs/adr/0006-config-base-mais-application-local.md)
+- Rules (auto-carregadas por glob): `api-codigo.md`, `api-config.md`,
+  `api-migrations.md`, `api-tests.md`, `api-auth.md` em [`../.claude/rules/`](../.claude/rules/)
+- Skill `revisar-sonar` — ao receber apontamentos do Sonar
 - [`../front/CLAUDE.md`](../front/CLAUDE.md) — contrato HTTP consumido pelo front

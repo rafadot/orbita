@@ -35,12 +35,22 @@ respeitar.
   de tentativas; canal inicial é e-mail — o protótipo comenta troca futura
   por app autenticador (TOTP), não obrigatória agora.
 
-## Em aberto (decidir na implementação, não nesta rodada de preparação)
+## Implementado
 
-- Como invalidar sessão/refresh token num esquema JWT stateless (ver
-  [`../../docs/adr/0002-jwt-stateless-sem-lib-externa.md`](../../docs/adr/0002-jwt-stateless-sem-lib-externa.md))
-  — provavelmente exige algum estado mínimo (tabela de refresh tokens
-  revogados, ou `tokenVersion`/`passwordChangedAt` no usuário, verificado a
-  cada request). Se a solução não for trivial, vira ADR própria.
+Cadastro, confirmação de e-mail (+ reenvio com cooldown), login com
+bloqueio por tentativas, refresh token com rotação, logout, `GET /me`. A
+invalidação de sessão num esquema JWT stateless foi resolvida com refresh
+token opaco hasheado + rotação — ver
+[`../../docs/adr/0005-refresh-token-opaco-com-rotacao.md`](../../docs/adr/0005-refresh-token-opaco-com-rotacao.md).
+
+## Em aberto (próxima rodada, fora do escopo desta)
+
+- **Esqueci minha senha** e **Redefinir senha**: token opaco de uso único
+  (mesmo padrão de `GeradorToken`/hash já usado aqui), histórico das 3
+  últimas senhas (`historico_senhas`, tabela nova), invalidar sessões ativas
+  ao redefinir (revogar todos os refresh tokens do usuário — já existe
+  `revogarTodosDoUsuario`).
+- **2FA**: código de 6 dígitos, cooldown de reenvio, código de backup,
+  bloqueio por excesso de tentativas.
 - Integração OAuth social (Google/Apple) — a UI reserva o espaço, mas
-  entrar ou não nesta fase é decisão de escopo, não de design.
+  entrar ou não é decisão de escopo, não de design.
