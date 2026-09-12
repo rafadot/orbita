@@ -69,12 +69,19 @@ Cliente centralizado em `core/api/`, com interceptor que injeta
 encaminha `/api` → `http://localhost:8080` (arquivo a criar na primeira
 feature que consumir a API).
 
-## UI — TODO (aguardando design)
+## UI — design system
 
-Ainda **não** há biblioteca de UI escolhida (Material, PrimeNG, etc.) nem
-design system. O usuário tem um design feito no Claude Design e vai
-compartilhar depois. **Não escolher lib nem criar componentes visuais
-genéricos antes disso** — só estrutura/lógica.
+Tokens (cor, tipografia, espaçamento, tema claro/escuro) já chegaram do
+protótipo Claude Design de autenticação e estão em
+`src/styles/_tokens.scss` — ver
+[`.claude/rules/front-styles.md`](../.claude/rules/front-styles.md) para
+convenção de uso e
+[`../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md`](../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md)
+para a origem.
+
+Ainda **não** há biblioteca de componentes Angular escolhida (Material,
+PrimeNG, etc.) nem componente visual genérico criado — isso fica para
+quando login/cadastro/recuperação de senha forem implementados de fato.
 
 ## Testes
 

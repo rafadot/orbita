@@ -35,6 +35,7 @@ filtrar pelo usuário autenticado.
 - [`front/CLAUDE.md`](front/CLAUDE.md) — convenções do front; carrega ao ler algo em `front/`
 - [`.claude/rules/api-migrations.md`](.claude/rules/api-migrations.md) — ao tocar `api/src/main/resources/db/**`
 - [`.claude/rules/api-tests.md`](.claude/rules/api-tests.md) — ao tocar `api/src/test/**`
+- [`.claude/rules/api-auth.md`](.claude/rules/api-auth.md) — ao tocar `api/src/main/java/**/auth/**`
 - [`.claude/rules/front-components.md`](.claude/rules/front-components.md) — ao tocar componentes Angular
 - [`.claude/rules/front-styles.md`](.claude/rules/front-styles.md) — ao tocar `.scss`
 - [`docs/adr/`](docs/adr/README.md) — decisões e o porquê; ler quando precisar entender a razão por trás de uma convenção, não por padrão

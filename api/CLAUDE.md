@@ -82,6 +82,11 @@ JWT stateless via `spring-boot-starter-oauth2-resource-server` (sem lib
 externa de JWT) — ver [`../docs/adr/0002-jwt-stateless-sem-lib-externa.md`](../docs/adr/0002-jwt-stateless-sem-lib-externa.md).
 Único grupo de endpoints público: `/auth/**`. Sem sessão, sem CSRF.
 
+Comportamento esperado do módulo `auth` (extraído do protótipo de design,
+que não trata de backend mas embute regras de negócio no texto das telas):
+ver [`.claude/rules/api-auth.md`](../.claude/rules/api-auth.md) e
+[`../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md`](../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md).
+
 ## Convenções de código
 
 - Lombok: só `@Getter`, `@Builder`, `@RequiredArgsConstructor`. Nunca
@@ -95,4 +100,6 @@ externa de JWT) — ver [`../docs/adr/0002-jwt-stateless-sem-lib-externa.md`](..
 
 - [`../docs/adr/0001-multiusuario-desde-o-dia-1.md`](../docs/adr/0001-multiusuario-desde-o-dia-1.md)
 - [`../docs/adr/0002-jwt-stateless-sem-lib-externa.md`](../docs/adr/0002-jwt-stateless-sem-lib-externa.md)
+- [`../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md`](../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md)
+- [`.claude/rules/api-auth.md`](../.claude/rules/api-auth.md) — ao tocar `api/src/main/java/**/auth/**`
 - [`../front/CLAUDE.md`](../front/CLAUDE.md) — contrato HTTP consumido pelo front
