@@ -1,6 +1,8 @@
 # Contexto pessoal (não compartilhado via CLAUDE.md)
 CLAUDE.local.md
 
+api/src/main/resources/application-local.properties
+
 # Editores / SO
 .DS_Store
 .idea/
