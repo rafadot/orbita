@@ -1,0 +1,15 @@
+# Contexto pessoal (não compartilhado via CLAUDE.md)
+CLAUDE.local.md
+
+# Editores / SO
+.DS_Store
+.idea/
+.vscode/
+
+# Angular
+front/.angular/
+front/node_modules/
+front/dist/
+
+# Maven
+api/target/
