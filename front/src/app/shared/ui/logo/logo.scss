@@ -1,0 +1,37 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: inline-flex;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo__icone {
+  width: 22px;
+  height: 22px;
+  color: tokens.color(accent);
+  flex: none;
+}
+
+.logo__texto {
+  font-family: tokens.$font-sans;
+  font-size: 18px;
+  font-weight: tokens.$fw-semibold;
+  letter-spacing: -0.01em;
+  color: tokens.color(text-primary);
+}
+
+@media (max-width: tokens.$bp-tablet) {
+  .logo__icone {
+    width: 20px;
+    height: 20px;
+  }
+
+  .logo__texto {
+    font-size: 17px;
+  }
+}

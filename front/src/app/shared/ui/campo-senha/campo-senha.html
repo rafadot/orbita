@@ -1,0 +1,23 @@
+<div class="campo-senha" [attr.data-invalido]="invalido() ? '' : null">
+  <input
+    [id]="idCampo()"
+    class="campo-senha__input"
+    [type]="visivel() ? 'text' : 'password'"
+    [value]="valor()"
+    [disabled]="desabilitado()"
+    [attr.aria-invalid]="invalido() ? 'true' : null"
+    [attr.aria-describedby]="descritoPor() ?? null"
+    [autocomplete]="autocomplete()"
+    (input)="aoDigitar($event)"
+    (blur)="aoTocarCampo()"
+  />
+  <button
+    type="button"
+    class="campo-senha__alternar"
+    (click)="alternarVisibilidade()"
+    [attr.aria-pressed]="visivel()"
+    [attr.aria-label]="visivel() ? 'Ocultar senha' : 'Mostrar senha'"
+  >
+    {{ visivel() ? 'ocultar' : 'ver' }}
+  </button>
+</div>

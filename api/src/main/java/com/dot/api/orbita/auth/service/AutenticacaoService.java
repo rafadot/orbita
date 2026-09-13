@@ -47,8 +47,12 @@ public class AutenticacaoService {
     /**
      * Reuso de um token de atualização já rotacionado é tratado como sinal
      * de roubo: revoga todos os tokens do usuário, não só o reutilizado.
+     * {@code noRollbackFor}: essa revogação e a {@link TokenInvalidoException}
+     * lançada em seguida acontecem na mesma transação — sem
+     * {@code noRollbackFor}, o rollback padrão do Spring para exceção não
+     * verificada desfaria justamente a revogação que devia proteger a conta.
      */
-    @Transactional
+    @Transactional(noRollbackFor = TokenInvalidoException.class)
     public TokensResponse renovarTokens(String tokenCru) {
         Instant agora = Instant.now();
         TokenAtualizacao token = buscarTokenAtualizacao(tokenCru);

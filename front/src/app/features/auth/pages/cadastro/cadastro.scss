@@ -1,0 +1,83 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: contents;
+}
+
+.cadastro__conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(8);
+}
+
+.cadastro__cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(2);
+}
+
+.cadastro__eyebrow {
+  @include tokens.type(eyebrow);
+  color: tokens.color(accent);
+}
+
+.cadastro__titulo {
+  @include tokens.type(display-lg);
+  color: tokens.color(text-primary);
+  margin: 0;
+
+  @media (max-width: tokens.$bp-desktop) {
+    @include tokens.type(h1);
+  }
+}
+
+.cadastro__subtitulo {
+  @include tokens.type(body-sm);
+  color: tokens.color(text-secondary);
+  margin: 0;
+}
+
+.cadastro__form {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(5);
+}
+
+.cadastro__campo {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(2);
+}
+
+.cadastro__rotulo {
+  @include tokens.field-label;
+}
+
+.cadastro__input {
+  @include tokens.input-base;
+}
+
+.cadastro__erro {
+  @include tokens.field-error;
+}
+
+.cadastro__acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cadastro__social {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: tokens.$bp-desktop) {
+    display: none;
+  }
+}
+
+.cadastro__rodape {
+  @include tokens.type(body-sm);
+  color: tokens.color(text-secondary);
+}

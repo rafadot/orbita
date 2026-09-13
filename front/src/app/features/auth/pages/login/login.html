@@ -1,0 +1,97 @@
+<app-auth-shell
+  asideHeadline="Um app para organizar a vida. Começando pelo que dói mais: o dinheiro."
+  asideTexto="Open Finance conecta seus bancos e cartões em minutos. Sem digitar extrato, sem CSV."
+  [asideLista]="[
+    'Autorização feita no ambiente do seu banco — nunca pedimos sua senha bancária.',
+    'Acesso somente leitura, regulado pelo Banco Central e revogável a qualquer momento.',
+    'Dados criptografados em trânsito e em repouso. Verificação em duas etapas ativada por padrão.',
+  ]"
+>
+  <div conteudo class="login__conteudo">
+    <div class="login__cabecalho">
+      <span class="login__eyebrow">Acesso</span>
+      <h1 class="login__titulo">Entre na sua conta</h1>
+    </div>
+
+    <form class="login__form" [formGroup]="form" (ngSubmit)="aoSubmeter()" novalidate>
+      @if (erroServidor(); as erro) {
+        <app-alerta tom="danger" [titulo]="erro.titulo">
+          {{ mensagemSecundaria() ?? erro.detalhe }}
+        </app-alerta>
+      }
+      @if (sucesso()) {
+        <app-alerta tom="success">Identidade confirmada. Levando você ao painel…</app-alerta>
+      }
+
+      <div class="login__campo">
+        <label class="login__rotulo" for="login-email">E-mail</label>
+        <input
+          id="login-email"
+          class="login__input"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          [attr.aria-invalid]="campoInvalido('email') ? 'true' : null"
+          [attr.aria-describedby]="campoInvalido('email') ? 'login-email-erro' : null"
+        />
+        @if (campoInvalido('email')) {
+          <div id="login-email-erro" class="login__erro">{{ mensagemEmail() }}</div>
+        }
+      </div>
+
+      <div class="login__campo">
+        <label class="login__rotulo" for="login-senha">Senha</label>
+        <app-campo-senha
+          idCampo="login-senha"
+          formControlName="senha"
+          [invalido]="campoInvalido('senha')"
+          [descritoPor]="campoInvalido('senha') ? 'login-senha-erro' : undefined"
+        />
+        @if (campoInvalido('senha')) {
+          <div id="login-senha-erro" class="login__erro">{{ mensagemSenha() }}</div>
+        }
+      </div>
+
+      <div class="login__linha">
+        <app-checkbox formControlName="manterConectado">Manter conectado</app-checkbox>
+        <span class="login__link-secundario" aria-disabled="true">Esqueci minha senha</span>
+      </div>
+
+      <div class="login__acoes">
+        <button
+          type="submit"
+          class="botao botao--primario"
+          [attr.aria-busy]="enviando() ? 'true' : null"
+          [disabled]="enviando()"
+        >
+          @if (enviando()) {
+            <span class="botao__spinner" aria-hidden="true"></span>
+            Verificando…
+          } @else {
+            Entrar
+          }
+        </button>
+
+        <div class="login__divisor" aria-hidden="true">
+          <span></span>
+          <span>ou</span>
+          <span></span>
+        </div>
+
+        <div class="login__social">
+          <button type="button" class="botao botao--secundario" disabled>
+            Continuar com Google
+          </button>
+          <button type="button" class="botao botao--secundario" disabled>
+            Continuar com Apple
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div rodape class="login__rodape">
+    <span>Não tem conta? <a routerLink="/cadastro">Cadastre-se</a></span>
+    <span class="login__versao">v1.0</span>
+  </div>
+</app-auth-shell>

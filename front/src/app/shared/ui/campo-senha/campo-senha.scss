@@ -1,0 +1,74 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: block;
+}
+
+.campo-senha {
+  display: flex;
+  align-items: center;
+  background: tokens.color(surface-raised);
+  border: 1px solid tokens.color(border-strong);
+  border-radius: var(--dl-radius-md);
+  padding: 0 14px;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background-color 120ms ease;
+
+  &:focus-within {
+    border-color: tokens.color(accent);
+    box-shadow: 0 0 0 var(--dl-ring-width) tokens.color(focus-ring);
+  }
+
+  &[data-invalido] {
+    border-color: tokens.color(danger);
+    background: tokens.color(danger-field-bg);
+
+    &:focus-within {
+      box-shadow: 0 0 0 var(--dl-ring-width) tokens.color(danger-bg);
+    }
+  }
+}
+
+.campo-senha__input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  @include tokens.type(body);
+  color: tokens.color(text-primary);
+  padding: 14px 0;
+
+  &::placeholder {
+    color: tokens.color(text-disabled);
+  }
+
+  &:disabled {
+    color: tokens.color(text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.campo-senha__alternar {
+  @include tokens.type(label);
+  letter-spacing: 0.08em;
+  color: tokens.color(accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex: none;
+
+  &:hover {
+    color: tokens.color(accent-hover);
+  }
+}
+
+@media (max-width: tokens.$bp-tablet) {
+  .campo-senha__input {
+    @include tokens.type(body-lg);
+    padding: 15px 0;
+  }
+}

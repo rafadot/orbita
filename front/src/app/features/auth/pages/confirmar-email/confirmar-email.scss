@@ -1,0 +1,119 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: contents;
+}
+
+.confirmar-email__cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(3);
+}
+
+.confirmar-email__eyebrow {
+  @include tokens.type(eyebrow);
+  color: tokens.color(accent);
+}
+
+.confirmar-email__titulo {
+  @include tokens.type(display-lg);
+  color: tokens.color(text-primary);
+  margin: 0;
+
+  @media (max-width: tokens.$bp-desktop) {
+    @include tokens.type(h1);
+  }
+}
+
+.confirmar-email__texto {
+  @include tokens.type(body);
+  color: tokens.color(text-body);
+  margin: 0;
+  max-width: 440px;
+}
+
+.confirmar-email__conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(8);
+}
+
+.confirmar-email__acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.confirmar-email__separador {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(2);
+  border-top: 1px solid tokens.color(border-subtle);
+  padding-top: tokens.space(5);
+  @include tokens.type(body-sm);
+  color: tokens.color(text-secondary);
+}
+
+.confirmar-email__link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: tokens.$fw-medium;
+  color: tokens.color(accent);
+  cursor: pointer;
+
+  &:hover {
+    color: tokens.color(accent-hover);
+  }
+}
+
+.confirmar-email__form {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(5);
+}
+
+.confirmar-email__campo {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(2);
+}
+
+.confirmar-email__rotulo {
+  @include tokens.field-label;
+}
+
+.confirmar-email__input {
+  @include tokens.input-base;
+}
+
+.confirmar-email__rodape {
+  @include tokens.type(body-sm);
+  color: tokens.color(text-secondary);
+}
+
+.confirmar-email__sucesso {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: tokens.space(3);
+}
+
+.confirmar-email__icone {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--dl-radius-md);
+  background: tokens.color(success);
+  color: tokens.color(text-on-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.confirmar-email__titulo-sucesso {
+  @include tokens.type(h2);
+  color: tokens.color(text-primary);
+  margin: 0;
+}

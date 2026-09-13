@@ -1,0 +1,133 @@
+@switch (modo()) {
+  @case ('confirmado') {
+    <app-auth-shell
+      asideHeadline="Confirmar o e-mail é o que protege sua conta no dia em que alguém tentar entrar nela."
+      asideTexto="É por esse endereço que avisamos sobre novos acessos e autorizações de Open Finance."
+    >
+      <div conteudo class="confirmar-email__sucesso">
+        <div class="confirmar-email__icone" aria-hidden="true">✓</div>
+        <h2 class="confirmar-email__titulo-sucesso">E-mail confirmado</h2>
+        <p class="confirmar-email__texto">
+          Sua conta está ativa. Vamos conectar seu primeiro banco?
+        </p>
+        <a routerLink="/login" class="botao botao--primario">Começar</a>
+      </div>
+      <div rodape></div>
+    </app-auth-shell>
+  }
+  @default {
+    <app-auth-shell
+      asideHeadline="Confirmar o e-mail é o que protege sua conta no dia em que alguém tentar entrar nela."
+      asideTexto="É por esse endereço que avisamos sobre novos acessos e autorizações de Open Finance."
+    >
+      <div conteudo class="confirmar-email__conteudo">
+        <div class="confirmar-email__cabecalho">
+          <span class="confirmar-email__eyebrow">Passo 2 de 2</span>
+          <h1 class="confirmar-email__titulo">Confirme seu e-mail</h1>
+
+          @if (modo() === 'confirmando') {
+            <p class="confirmar-email__texto">Confirmando seu e-mail…</p>
+          } @else if (modo() === 'erro-token') {
+            <app-alerta tom="danger" titulo="Este link expirou">
+              Peça um novo link para confirmar seu e-mail.
+            </app-alerta>
+          } @else if (email()) {
+            <p class="confirmar-email__texto">
+              Enviamos um link de confirmação para <strong>{{ email() }}</strong
+              >. O link expira em 30 minutos.
+            </p>
+          } @else {
+            <p class="confirmar-email__texto">
+              Informe o e-mail que você cadastrou para reenviar o link.
+            </p>
+          }
+        </div>
+
+        @if (email() && modo() !== 'confirmando') {
+          <div class="confirmar-email__acoes">
+            @if (linkWebmail(); as url) {
+              <a [href]="url" target="_blank" rel="noopener" class="botao botao--primario"
+                >Abrir meu e-mail</a
+              >
+            }
+
+            @if (reenviado()) {
+              <app-alerta tom="success">Link reenviado para {{ email() }}</app-alerta>
+            }
+
+            @if (reenviando()) {
+              <button
+                type="button"
+                class="botao botao--secundario"
+                [attr.aria-busy]="true"
+                disabled
+              >
+                <span class="botao__spinner" aria-hidden="true"></span>
+                Reenviando…
+              </button>
+            } @else if (segundosRestantes() > 0) {
+              <button type="button" class="botao botao--secundario" disabled>
+                Reenviar link em {{ contadorFormatado() }}
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="botao botao--secundario"
+                (click)="reenviarComEmailAtual()"
+              >
+                Reenviar link
+              </button>
+            }
+          </div>
+
+          <div class="confirmar-email__separador">
+            <span
+              >Não chegou? Verifique a caixa de spam ou
+              <button type="button" class="confirmar-email__link" (click)="usarOutroEmail()">
+                use outro e-mail</button
+              >.</span
+            >
+          </div>
+        } @else if (modo() !== 'confirmando') {
+          <form
+            class="confirmar-email__form"
+            [formGroup]="formEmail"
+            (ngSubmit)="aoSubmeterEmail()"
+            novalidate
+          >
+            <div class="confirmar-email__campo">
+              <label class="confirmar-email__rotulo" for="confirmar-email-input">E-mail</label>
+              <input
+                id="confirmar-email-input"
+                class="confirmar-email__input"
+                type="email"
+                formControlName="email"
+                autocomplete="email"
+              />
+            </div>
+            <button
+              type="submit"
+              class="botao botao--primario"
+              [attr.aria-busy]="reenviando() ? 'true' : null"
+              [disabled]="reenviando()"
+            >
+              @if (reenviando()) {
+                <span class="botao__spinner" aria-hidden="true"></span>
+                Enviando…
+              } @else {
+                Reenviar link
+              }
+            </button>
+            @if (reenviado()) {
+              <app-alerta tom="success">Link enviado, se o e-mail estiver cadastrado.</app-alerta>
+            }
+          </form>
+        }
+      </div>
+
+      <div rodape class="confirmar-email__rodape">
+        <a routerLink="/login">Voltar para o login</a>
+      </div>
+    </app-auth-shell>
+  }
+}

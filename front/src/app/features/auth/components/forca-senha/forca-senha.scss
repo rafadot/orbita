@@ -1,0 +1,40 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: block;
+}
+
+.forca-senha {
+  @include tokens.password-strength;
+}
+
+.forca-senha__legenda {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: tokens.space(2);
+  margin-top: tokens.space(2);
+  @include tokens.type(caption);
+}
+
+.forca-senha__rotulo {
+  font-weight: tokens.$fw-medium;
+  color: tokens.color(text-secondary);
+
+  &[data-nivel='1'] {
+    color: tokens.color(danger-text);
+  }
+
+  &[data-nivel='2'] {
+    color: tokens.color(warning-text);
+  }
+
+  &[data-nivel='3'],
+  &[data-nivel='4'] {
+    color: tokens.color(success-text);
+  }
+}
+
+.forca-senha__dica {
+  color: tokens.color(text-secondary);
+}

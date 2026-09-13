@@ -1,0 +1,33 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: tokens.color(surface);
+}
+
+.inicio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: tokens.space(5);
+  padding: tokens.space(8);
+  background: tokens.color(surface-raised);
+  border: 1px solid tokens.color(border-subtle);
+  border-radius: var(--dl-radius-lg);
+  min-width: 320px;
+}
+
+.inicio__saudacao {
+  @include tokens.type(h2);
+  color: tokens.color(text-primary);
+  margin: 0;
+}
+
+.inicio__email {
+  @include tokens.type(body-sm);
+  color: tokens.color(text-secondary);
+  margin: 0;
+}

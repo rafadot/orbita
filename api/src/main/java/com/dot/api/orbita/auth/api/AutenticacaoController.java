@@ -86,8 +86,8 @@ public class AutenticacaoController {
             description = "O refresh token é rotacionado a cada uso. Reutilizar um refresh token já rotacionado "
                     + "é tratado como sinal de roubo: revoga todos os tokens do usuário.")
     @ApiResponse(responseCode = "200", description = "Tokens renovados")
-    @ApiResponse(responseCode = "400", description = "Dados inválidos — corpo traz `erros` com campo e mensagem")
-    @ApiResponse(responseCode = "401", description = "Token de atualização inválido, expirado ou revogado")
+    @ApiResponse(responseCode = "400",
+            description = "Dados inválidos (corpo traz `erros` com campo e mensagem) ou token de atualização inválido, expirado ou revogado")
     public ResponseEntity<TokensResponse> renovar(@Valid @RequestBody RenovarRequest request) {
         TokensResponse tokens = autenticacaoService.renovarTokens(request.tokenAtualizacao());
         return ResponseEntity.ok(tokens);

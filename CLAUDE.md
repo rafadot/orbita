@@ -40,8 +40,7 @@ filtrar pelo usuário autenticado.
 - [`.claude/rules/api-migrations.md`](.claude/rules/api-migrations.md) — ao tocar `api/src/main/resources/db/**`
 - [`.claude/rules/api-tests.md`](.claude/rules/api-tests.md) — ao tocar `api/src/test/**`
 - [`.claude/rules/api-auth.md`](.claude/rules/api-auth.md) — ao tocar `api/src/main/java/**/auth/**`
-- [`.claude/rules/front-components.md`](.claude/rules/front-components.md) — ao tocar componentes Angular
-- [`.claude/rules/front-styles.md`](.claude/rules/front-styles.md) — ao tocar `.scss`
+- [`.claude/rules/front-components.md`](.claude/rules/front-components.md) / [`front-styles.md`](.claude/rules/front-styles.md) / [`front-http.md`](.claude/rules/front-http.md) — componentes Angular / `.scss` / sessão+HTTP (`core/api`, `core/auth`, `environments`)
 - [`docs/adr/`](docs/adr/README.md) — decisões e o porquê; ler quando precisar entender a razão por trás de uma convenção, não por padrão
 
 ## Comandos essenciais

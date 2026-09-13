@@ -71,8 +71,7 @@ diretamente — só através de um serviço exposto publicamente (interface em
 `Repository` (Spring Data JPA).
 
 - Request/response são `record` — a entidade JPA nunca sai do controller.
-- Construtor injection (via Lombok `@RequiredArgsConstructor`), nunca
-  `@Autowired` em campo.
+- Construtor injection (Lombok `@RequiredArgsConstructor`), nunca `@Autowired` em campo.
 
 ## Erros
 
@@ -92,7 +91,9 @@ Refresh token é opaco, hasheado no banco e rotacionado a cada uso — ver
 Único grupo de endpoints público: `/auth/**`. Sem sessão, sem CSRF — o
 Sonar marca isso como hotspot de segurança (S4502); é esperado (API
 stateless sem cookie de sessão, não há CSRF a proteger) e deve ser
-revisado como "Safe" direto no SonarQube, não silenciado em código.
+revisado como "Safe" direto no SonarQube, não silenciado em código. CORS
+liberado só pra origem de `orbita.frontend-url` — front e API rodam em
+servidores diferentes (ver [ADR 0010](../docs/adr/0010-cors-front-api-servidores-diferentes.md)).
 
 Módulo `auth` (cadastro, confirmação de e-mail, login, refresh, logout,
 `GET /me`) documentado por completo em
@@ -138,7 +139,8 @@ tocar `api/src/main/java/**`):
   [0005 refresh token](../docs/adr/0005-refresh-token-opaco-com-rotacao.md),
   [0006 config](../docs/adr/0006-config-base-mais-application-local.md),
   [0007 OpenAPI](../docs/adr/0007-openapi-via-springdoc.md),
-  [0008 erros em pt-BR](../docs/adr/0008-erros-http-em-pt-br-com-lista-de-campos.md)
+  [0008 erros em pt-BR](../docs/adr/0008-erros-http-em-pt-br-com-lista-de-campos.md),
+  [0010 CORS](../docs/adr/0010-cors-front-api-servidores-diferentes.md)
 - Rules (auto-carregadas por glob): `api-codigo.md`, `api-config.md`,
   `api-erros.md`, `api-migrations.md`, `api-tests.md`, `api-auth.md` em
   [`../.claude/rules/`](../.claude/rules/)

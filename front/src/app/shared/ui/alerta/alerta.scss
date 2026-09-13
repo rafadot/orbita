@@ -1,0 +1,13 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: block;
+}
+
+.dl-alert {
+  @include tokens.alert-base;
+}
+
+.dl-alert--compacto {
+  padding: 10px 14px;
+}

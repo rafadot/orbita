@@ -1,3 +1,60 @@
 /* You can add global styles to this file, and also import other style files */
 
+@use 'styles/tokens' as tokens;
+
 @forward 'styles/tokens';
+
+:root {
+  color-scheme: light dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: tokens.color(surface);
+  color: tokens.color(text-primary);
+  font-family: tokens.$font-sans;
+}
+
+a {
+  color: tokens.color(accent);
+  text-decoration: none;
+
+  &:hover {
+    color: tokens.color(accent-hover);
+  }
+}
+
+.botao {
+  @include tokens.button-base;
+}
+
+.botao--primario {
+  @include tokens.button-primary;
+}
+
+.botao--secundario {
+  @include tokens.button-secondary;
+}
+
+.botao--fantasma {
+  @include tokens.button-ghost;
+}
+
+.botao .botao__spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: botao-girar 700ms linear infinite;
+}
+
+@keyframes botao-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}

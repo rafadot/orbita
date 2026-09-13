@@ -22,15 +22,21 @@ npx prettier --write .       # formatação
 
 ```
 src/app/
-├── core/            # auth, interceptors, guards, cliente HTTP, layout raiz
-├── shared/          # ui/pipes/utils sem estado, reutilizáveis entre features
+├── core/
+│   ├── api/         # ErroApi, erroApiInterceptor, tokenInterceptor, renovarSessaoInterceptor
+│   └── auth/        # SessaoService, armazenamento-sessao, Usuario/TokensResponse, autenticadoGuard/anonimoGuard
+├── shared/ui/       # Logo, Alerta, CampoSenha, Checkbox — sem estado, reutilizáveis
 └── features/
-    └── <modulo>/    # mesmo nome do módulo na api (ex.: financas)
-        ├── <modulo>.routes.ts
-        ├── pages/
-        ├── components/
-        ├── <modulo>.service.ts   # signals + chamadas HTTP
-        └── <modulo>.model.ts
+    ├── auth/        # login, cadastro, confirmar-email — ver auth/CLAUDE.md da api
+    │   ├── auth.routes.ts
+    │   ├── pages/<pagina>/{<pagina>.ts,.html,.scss}
+    │   ├── components/  # auth-shell, forca-senha
+    │   ├── validators/senha-forte.ts   # replica @SenhaForte da API
+    │   ├── auth.service.ts
+    │   ├── auth.model.ts
+    │   ├── email-pendente.ts   # sessionStorage do e-mail aguardando confirmação
+    │   └── erros-formulario.ts # aplicarErrosDeCampo, formatarHorario
+    └── painel/      # placeholder pós-login (GET /me + sair) até existir 1º módulo real
 ```
 
 Regra de dependência: `features → shared → core`. Uma feature nunca importa
@@ -39,8 +45,10 @@ outra feature diretamente.
 ## Roteamento
 
 Lazy loading por feature via `loadChildren` nas rotas de `<modulo>.routes.ts`.
-`app.routes.ts` só registra as features, sem lógica. Guard de autenticação
-mora em `core/`.
+`app.routes.ts` só registra as features, sem lógica. Guards de autenticação
+(`autenticadoGuard`, `anonimoGuard`) moram em `core/auth/`.
+`provideRouter(routes, withComponentInputBinding())` — rotas podem receber
+query params direto como `input()` (ver `ConfirmarEmail.token`).
 
 ## Estado
 
@@ -63,17 +71,14 @@ Signals dentro do serviço da feature; `computed()` para valores derivados;
 
 ## HTTP
 
-Cliente centralizado em `core/api/`, com interceptor que injeta
-`Authorization: Bearer <jwt>` e trata erro `application/problem+json` num
-único lugar. Base URL por `environments/`. Em dev, `proxy.conf.json`
-encaminha `/api` → `http://localhost:8080` (arquivo a criar na primeira
-feature que consumir a API).
-
-Todo `ProblemDetail` já chega com `title`/`detail` em pt-BR (fonte:
-`GlobalExceptionHandler` na API). Um 400 de validação de corpo traz a
-extensão `erros: [{campo, mensagem}]` — o interceptor/serviço mapeia por
-`campo` pra mostrar a mensagem no input correspondente, em vez de exibir
-só o `detail` genérico.
+Sessão via `Authorization: Bearer`, tokens em `localStorage`/`sessionStorage`
+conforme "manter conectado" — nunca cookie (avaliado e revertido, ver
+[ADR 0009](../docs/adr/0009-sessao-bearer-storage-local.md)). Front e API
+rodam em servidores diferentes, CORS liberado do lado da API (ver
+[ADR 0010](../docs/adr/0010-cors-front-api-servidores-diferentes.md)).
+Interceptors (ordem importa), `SessaoService`, split de `environment.ts`
+por build config e tratamento de `ProblemDetail`:
+[`.claude/rules/front-http.md`](../.claude/rules/front-http.md).
 
 ## UI — design system
 
@@ -86,8 +91,17 @@ convenção de uso e
 para a origem.
 
 Ainda **não** há biblioteca de componentes Angular escolhida (Material,
-PrimeNG, etc.) nem componente visual genérico criado — isso fica para
-quando login/cadastro/recuperação de senha forem implementados de fato.
+PrimeNG...). O que existe: componentes genéricos em `shared/ui/` (`Logo`,
+`Alerta`, `CampoSenha`, `Checkbox` — os dois últimos são
+`ControlValueAccessor`, usam com `formControlName` normalmente) e botão via
+classes globais em `styles.scss` (`.botao.botao--primario/--secundario/--fantasma`,
+`[aria-busy]` mostra `.botao__spinner`) — evita duplicar
+`@include tokens.button-*` em cada componente. `AuthShell`
+(`features/auth/components/`) é o layout comum das 3 telas de auth
+(`@include tokens.auth-shell`). Vários estilos de componente passam do
+budget de 4kB *warning* (nunca do *error* de 8kB) só por expandirem mixins
+grandes do design system (`input-base`, `alert-base`) — aceito, é o preço
+de reusar o mixin em vez de reinventar.
 
 ## Testes
 
@@ -98,5 +112,8 @@ services/signals (lógica) sobre templates triviais.
 
 - [`.claude/rules/front-components.md`](../.claude/rules/front-components.md)
 - [`.claude/rules/front-styles.md`](../.claude/rules/front-styles.md)
-- [`../docs/adr/0003-angular-signals-zoneless-sem-store.md`](../docs/adr/0003-angular-signals-zoneless-sem-store.md)
+- [`.claude/rules/front-http.md`](../.claude/rules/front-http.md) — interceptors, sessão, `environment.ts`
+- ADRs: [0003 signals](../docs/adr/0003-angular-signals-zoneless-sem-store.md),
+  [0009 sessão Bearer](../docs/adr/0009-sessao-bearer-storage-local.md),
+  [0010 CORS](../docs/adr/0010-cors-front-api-servidores-diferentes.md)
 - [`../api/CLAUDE.md`](../api/CLAUDE.md) — contrato HTTP consumido daqui

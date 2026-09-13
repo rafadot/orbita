@@ -1,0 +1,8 @@
+<div class="dl-alert" [class.dl-alert--compacto]="compacto()" [attr.data-tone]="tom()" role="alert">
+  @if (titulo()) {
+    <div class="dl-alert__title">{{ titulo() }}</div>
+  }
+  <div class="dl-alert__text">
+    <ng-content />
+  </div>
+</div>

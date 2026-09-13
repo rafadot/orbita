@@ -1,0 +1,115 @@
+<app-auth-shell
+  asideHeadline="Nada de banco é conectado agora. Primeiro, a sua conta."
+  asideTexto="Você decide depois quais instituições entram — e pode remover qualquer uma em dois toques."
+  [asideLista]="[
+    'Sua senha é armazenada com hash Argon2 — nem nós conseguimos lê-la.',
+    'Nunca vendemos nem compartilhamos seus dados com terceiros.',
+  ]"
+>
+  <div conteudo class="cadastro__conteudo">
+    <div class="cadastro__cabecalho">
+      <span class="cadastro__eyebrow">Passo 1 de 2</span>
+      <h1 class="cadastro__titulo">Criar sua conta</h1>
+      <p class="cadastro__subtitulo">Leva menos de um minuto. Você conecta seus bancos depois.</p>
+    </div>
+
+    <form class="cadastro__form" [formGroup]="form" (ngSubmit)="aoSubmeter()" novalidate>
+      @if (erroServidor(); as erro) {
+        @if (erro.tipo === 'email-ja-cadastrado') {
+          <app-alerta tom="danger" titulo="Este e-mail já tem uma conta">
+            Tente <a routerLink="/login">entrar</a> ou recuperar a senha.
+          </app-alerta>
+        } @else {
+          <app-alerta tom="danger" [titulo]="erro.titulo">{{ erro.detalhe }}</app-alerta>
+        }
+      }
+      @if (termosNaoAceitos()) {
+        <app-alerta tom="warning" [compacto]="true">Aceite os Termos para continuar.</app-alerta>
+      }
+      @if (sucesso()) {
+        <app-alerta tom="success">Conta criada. Confirme seu e-mail para continuar.</app-alerta>
+      }
+
+      <div class="cadastro__campo">
+        <label class="cadastro__rotulo" for="cadastro-nome">Nome completo</label>
+        <input
+          id="cadastro-nome"
+          class="cadastro__input"
+          type="text"
+          formControlName="nome"
+          autocomplete="name"
+          [attr.aria-invalid]="campoInvalido('nome') ? 'true' : null"
+          [attr.aria-describedby]="campoInvalido('nome') ? 'cadastro-nome-erro' : null"
+        />
+        @if (campoInvalido('nome')) {
+          <div id="cadastro-nome-erro" class="cadastro__erro">{{ mensagemNome() }}</div>
+        }
+      </div>
+
+      <div class="cadastro__campo">
+        <label class="cadastro__rotulo" for="cadastro-email">E-mail</label>
+        <input
+          id="cadastro-email"
+          class="cadastro__input"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          [attr.aria-invalid]="campoInvalido('email') ? 'true' : null"
+          [attr.aria-describedby]="campoInvalido('email') ? 'cadastro-email-erro' : null"
+        />
+        @if (campoInvalido('email')) {
+          <div id="cadastro-email-erro" class="cadastro__erro">{{ mensagemEmail() }}</div>
+        }
+      </div>
+
+      <div class="cadastro__campo">
+        <label class="cadastro__rotulo" for="cadastro-senha">Senha</label>
+        <app-campo-senha
+          idCampo="cadastro-senha"
+          formControlName="senha"
+          autocomplete="new-password"
+          [invalido]="campoInvalido('senha')"
+          [descritoPor]="campoInvalido('senha') ? 'cadastro-senha-erro' : undefined"
+        />
+        <app-forca-senha [senha]="form.controls.senha.value" />
+        @if (campoInvalido('senha')) {
+          <div id="cadastro-senha-erro" class="cadastro__erro">{{ mensagemSenha() }}</div>
+        }
+      </div>
+
+      <app-checkbox formControlName="aceitouTermos">
+        Li e aceito os <strong>Termos de Uso</strong> e a <strong>Política de Privacidade</strong>,
+        incluindo o tratamento dos meus dados financeiros.
+      </app-checkbox>
+
+      <div class="cadastro__acoes">
+        <button
+          type="submit"
+          class="botao botao--primario"
+          [attr.aria-busy]="enviando() ? 'true' : null"
+          [disabled]="enviando()"
+        >
+          @if (enviando()) {
+            <span class="botao__spinner" aria-hidden="true"></span>
+            Criando conta…
+          } @else {
+            Criar conta
+          }
+        </button>
+
+        <div class="cadastro__social">
+          <button type="button" class="botao botao--secundario" disabled>
+            Continuar com Google
+          </button>
+          <button type="button" class="botao botao--secundario" disabled>
+            Continuar com Apple
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div rodape class="cadastro__rodape">
+    <span>Já tem conta? <a routerLink="/login">Entrar</a></span>
+  </div>
+</app-auth-shell>

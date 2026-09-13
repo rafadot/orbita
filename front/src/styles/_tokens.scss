@@ -9,103 +9,171 @@
 // Não editar valores aqui sem ressincronizar com o protótipo.
 // ============================================================
 
-@use "sass:map";
+@use 'sass:list';
+@use 'sass:map';
 
 // ------------------------------------------------------------
 // 1. PRIMITIVAS (valores crus, não usar direto nos componentes)
 // ------------------------------------------------------------
 
 // Marca
-$brand-50:  #EEF0FE;
-$brand-100: #C3C9FA; // anel de foco
-$brand-400: #5B6BFF; // ação no tema escuro
-$brand-600: #2233D9; // ação
-$brand-700: #1B29B0; // hover
-$brand-800: #16209C; // active
+$brand-50: #eef0fe;
+$brand-100: #c3c9fa; // anel de foco
+$brand-400: #5b6bff; // ação no tema escuro
+$brand-600: #2233d9; // ação
+$brand-700: #1b29b0; // hover
+$brand-800: #16209c; // active
 
 // Neutros frios
-$neutral-0:    #FFFFFF;
-$neutral-25:   #FCFCFD;
-$neutral-50:   #F3F4F7;
-$neutral-100:  #EDEFF3;
-$neutral-150:  #E4E7ED;
-$neutral-200:  #DCDFE6;
-$neutral-300:  #C9CED8;
-$neutral-400:  #9AA0AC;
-$neutral-500:  #7A8290;
-$neutral-600:  #5C6472;
-$neutral-700:  #3A414D;
-$neutral-900:  #101216;
+$neutral-0: #ffffff;
+$neutral-25: #fcfcfd;
+$neutral-50: #f3f4f7;
+$neutral-100: #edeff3;
+$neutral-150: #e4e7ed;
+$neutral-200: #dcdfe6;
+$neutral-300: #c9ced8;
+$neutral-400: #9aa0ac;
+$neutral-500: #7a8290;
+$neutral-600: #5c6472;
+$neutral-700: #3a414d;
+$neutral-900: #101216;
 
 // Neutros escuros
-$dark-900: #0C0E12;
-$dark-800: #14171D;
-$dark-700: #1B1F27;
-$dark-600: #262B34;
-$dark-500: #343A45;
-$dark-300: #9AA3B2;
-$dark-200: #C7CDD9;
-$dark-50:  #F2F4F8;
+$dark-900: #0c0e12;
+$dark-800: #14171d;
+$dark-700: #1b1f27;
+$dark-600: #262b34;
+$dark-500: #343a45;
+$dark-300: #9aa3b2;
+$dark-200: #c7cdd9;
+$dark-50: #f2f4f8;
 
 // Feedback — light
-$red-50:   #FDEFEE;
-$red-25:   #FFF7F6; // fundo de input com erro
-$red-500:  #D93025;
-$red-700:  #A61B10;
-$red-ink:  #7E4A44; // texto de apoio dentro do alerta
+$red-50: #fdefee;
+$red-25: #fff7f6; // fundo de input com erro
+$red-500: #d93025;
+$red-700: #a61b10;
+$red-ink: #7e4a44; // texto de apoio dentro do alerta
 
-$green-50:  #EFF7F1;
-$green-25:  #F7FCF9;
-$green-500: #1B7A45;
-$green-700: #145C34;
-$green-ink: #3F6B52;
+$green-50: #eff7f1;
+$green-25: #f7fcf9;
+$green-500: #1b7a45;
+$green-700: #145c34;
+$green-ink: #3f6b52;
 
-$amber-50:  #FFF6E6;
-$amber-500: #B26A00;
-$amber-700: #8A5200;
-$amber-ink: #7A5A2E;
+$amber-50: #fff6e6;
+$amber-500: #b26a00;
+$amber-700: #8a5200;
+$amber-ink: #7a5a2e;
 
 // Feedback — dark
-$red-dark-bg:     #2A1614;
-$red-dark-fg:     #FF7A70;
-$green-dark-bg:   #0F2418;
-$green-dark-fg:   #56C98A;
-$amber-dark-bg:   #2A2010;
-$amber-dark-fg:   #E8A838;
-$brand-dark-bg:   #171C36;
+$red-dark-bg: #2a1614;
+$red-dark-fg: #ff7a70;
+$green-dark-bg: #0f2418;
+$green-dark-fg: #56c98a;
+$amber-dark-bg: #2a2010;
+$amber-dark-fg: #e8a838;
+$brand-dark-bg: #171c36;
 
 // ------------------------------------------------------------
 // 2. TIPOGRAFIA
 // ------------------------------------------------------------
 
-$font-sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+$font-sans:
+  'Space Grotesk',
+  system-ui,
+  -apple-system,
+  sans-serif;
 $font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
-$fw-regular:  400;
-$fw-medium:   500;
+$fw-regular: 400;
+$fw-medium: 500;
 $fw-semibold: 600;
 
 // (size, line-height, letter-spacing, weight)
 $type-scale: (
-  display-lg: (42px, 1.05, -0.03em, $fw-semibold), // H1 desktop
-  display-md: (34px, 1.2,  -0.02em, $fw-medium),   // painel lateral
-  h1:         (30px, 1.1,  -0.02em, $fw-semibold), // H1 mobile
-  h2:         (20px, 1.25, -0.01em, $fw-semibold),
-  body-lg:    (16px, 1.6,   0,      $fw-regular),  // inputs mobile (evita zoom iOS)
-  body:       (15px, 1.6,   0,      $fw-regular),  // inputs/botões desktop
-  body-sm:    (14px, 1.5,   0,      $fw-regular),
-  caption:    (13px, 1.5,   0,      $fw-regular),  // erros e ajuda
-  label:      (11px, 1.2,   0.10em, $fw-regular),  // mono, uppercase
-  eyebrow:    (11px, 1.2,   0.16em, $fw-regular),  // mono, uppercase, brand
-  code-lg:    (26px, 1,     0.02em, $fw-regular)   // dígitos do OTP
+  display-lg: (
+    42px,
+    1.05,
+    -0.03em,
+    $fw-semibold,
+  ),
+  // H1 desktop
+  display-md: (
+      34px,
+      1.2,
+      -0.02em,
+      $fw-medium,
+    ),
+  // painel lateral
+  h1: (
+      30px,
+      1.1,
+      -0.02em,
+      $fw-semibold,
+    ),
+  // H1 mobile
+  h2: (
+      20px,
+      1.25,
+      -0.01em,
+      $fw-semibold,
+    ),
+  body-lg: (
+    16px,
+    1.6,
+    0,
+    $fw-regular,
+  ),
+  // inputs mobile (evita zoom iOS)
+  body: (
+      15px,
+      1.6,
+      0,
+      $fw-regular,
+    ),
+  // inputs/botões desktop
+  body-sm: (
+      14px,
+      1.5,
+      0,
+      $fw-regular,
+    ),
+  caption: (
+    13px,
+    1.5,
+    0,
+    $fw-regular,
+  ),
+  // erros e ajuda
+  label: (
+      11px,
+      1.2,
+      0.1em,
+      $fw-regular,
+    ),
+  // mono, uppercase
+  eyebrow: (
+      11px,
+      1.2,
+      0.16em,
+      $fw-regular,
+    ),
+  // mono, uppercase, brand
+  code-lg: (
+      26px,
+      1,
+      0.02em,
+      $fw-regular,
+    ), // dígitos do OTP
 );
 
 @mixin type($name) {
   $t: map.get($type-scale, $name);
-  font-size: nth($t, 1);
-  line-height: nth($t, 2);
-  letter-spacing: nth($t, 3);
-  font-weight: nth($t, 4);
+  font-size: list.nth($t, 1);
+  line-height: list.nth($t, 2);
+  letter-spacing: list.nth($t, 3);
+  font-weight: list.nth($t, 4);
   @if $name == label or $name == eyebrow or $name == code-lg {
     font-family: $font-mono;
   } @else {
@@ -121,29 +189,41 @@ $type-scale: (
 // ------------------------------------------------------------
 
 $space: (
-  0: 0, 1: 4px, 2: 8px, 3: 12px, 4: 16px, 5: 20px, 6: 24px,
-  8: 32px, 10: 40px, 12: 48px, 16: 64px, 20: 80px
+  0: 0,
+  1: 4px,
+  2: 8px,
+  3: 12px,
+  4: 16px,
+  5: 20px,
+  6: 24px,
+  8: 32px,
+  10: 40px,
+  12: 48px,
+  16: 64px,
+  20: 80px,
 );
-@function space($step) { @return map.get($space, $step); }
+@function space($step) {
+  @return map.get($space, $step);
+}
 
-$radius-sm:   4px;   // alertas, barras de força
-$radius-md:   8px;   // padrão: input, botão, card
-$radius-lg:   12px;  // modais, bottom sheet
+$radius-sm: 4px; // alertas, barras de força
+$radius-md: 8px; // padrão: input, botão, card
+$radius-lg: 12px; // modais, bottom sheet
 $radius-pill: 999px;
 
 // Sem sombras de elevação na direção escolhida; só o anel de foco.
 $ring-width: 3px;
 
 $control-h-desktop: 48px;
-$control-h-mobile:  52px; // >= 44px de alvo de toque
-$control-pad-x:     14px;
+$control-h-mobile: 52px; // >= 44px de alvo de toque
+$control-pad-x: 14px;
 
-$form-col-w:  660px;  // coluna do formulário no desktop
-$form-pad-x:  80px;
+$form-col-w: 660px; // coluna do formulário no desktop
+$form-pad-x: 80px;
 $field-max-w: 400px;
 
-$bp-mobile:  480px;
-$bp-tablet:  768px;
+$bp-mobile: 480px;
+$bp-tablet: 768px;
 $bp-desktop: 1024px;
 
 // ------------------------------------------------------------
@@ -152,95 +232,94 @@ $bp-desktop: 1024px;
 // ------------------------------------------------------------
 
 $theme-light: (
-  surface-sunken:    $neutral-50,
-  surface:           $neutral-25,
-  surface-raised:    $neutral-0,
-  surface-disabled:  $neutral-100,
+  surface-sunken: $neutral-50,
+  surface: $neutral-25,
+  surface-raised: $neutral-0,
+  surface-disabled: $neutral-100,
 
-  border-subtle:     $neutral-150,
-  border:            $neutral-200,
-  border-strong:     $neutral-300,
-  border-hover:      $neutral-400,
+  border-subtle: $neutral-150,
+  border: $neutral-200,
+  border-strong: $neutral-300,
+  border-hover: $neutral-400,
 
-  text-primary:      $neutral-900,
-  text-body:         $neutral-700,
-  text-secondary:    $neutral-600,
-  text-muted:        $neutral-500,
-  text-disabled:     $neutral-400,
-  text-on-accent:    $neutral-0,
+  text-primary: $neutral-900,
+  text-body: $neutral-700,
+  text-secondary: $neutral-600,
+  text-muted: $neutral-500,
+  text-disabled: $neutral-400,
+  text-on-accent: $neutral-0,
 
-  accent:            $brand-600,
-  accent-hover:      $brand-700,
-  accent-active:     $brand-800,
-  accent-soft:       $brand-50,
-  focus-ring:        $brand-100,
+  accent: $brand-600,
+  accent-hover: $brand-700,
+  accent-active: $brand-800,
+  accent-soft: $brand-50,
+  focus-ring: $brand-100,
 
-  danger:            $red-500,
-  danger-bg:         $red-50,
-  danger-field-bg:   $red-25,
-  danger-text:       $red-700,
-  danger-ink:        $red-ink,
+  danger: $red-500,
+  danger-bg: $red-50,
+  danger-field-bg: $red-25,
+  danger-text: $red-700,
+  danger-ink: $red-ink,
 
-  success:           $green-500,
-  success-bg:        $green-50,
-  success-field-bg:  $green-25,
-  success-text:      $green-700,
-  success-ink:       $green-ink,
+  success: $green-500,
+  success-bg: $green-50,
+  success-field-bg: $green-25,
+  success-text: $green-700,
+  success-ink: $green-ink,
 
-  warning:           $amber-500,
-  warning-bg:        $amber-50,
-  warning-text:      $amber-700,
-  warning-ink:       $amber-ink,
+  warning: $amber-500,
+  warning-bg: $amber-50,
+  warning-text: $amber-700,
+  warning-ink: $amber-ink,
 
-  info:              $brand-600,
-  info-bg:           $brand-50,
-  info-text:         $brand-800
+  info: $brand-600,
+  info-bg: $brand-50,
+  info-text: $brand-800,
 );
 
 $theme-dark: (
-  surface-sunken:    $dark-900,
-  surface:           $dark-800,
-  surface-raised:    $dark-700,
-  surface-disabled:  $dark-600,
+  surface-sunken: $dark-900,
+  surface: $dark-800,
+  surface-raised: $dark-700,
+  surface-disabled: $dark-600,
 
-  border-subtle:     $dark-600,
-  border:            $dark-600,
-  border-strong:     $dark-500,
-  border-hover:      $dark-300,
+  border-subtle: $dark-600,
+  border: $dark-600,
+  border-strong: $dark-500,
+  border-hover: $dark-300,
 
-  text-primary:      $dark-50,
-  text-body:         $dark-200,
-  text-secondary:    $dark-300,
-  text-muted:        #6C7686,
-  text-disabled:     #5A6373,
-  text-on-accent:    $dark-900,
+  text-primary: $dark-50,
+  text-body: $dark-200,
+  text-secondary: $dark-300,
+  text-muted: #6c7686,
+  text-disabled: #5a6373,
+  text-on-accent: $dark-900,
 
-  accent:            $brand-400,
-  accent-hover:      #7C89FF,
-  accent-active:     #98A2FF,
-  accent-soft:       $brand-dark-bg,
-  focus-ring:        rgba(91, 107, 255, 0.35),
+  accent: $brand-400,
+  accent-hover: #7c89ff,
+  accent-active: #98a2ff,
+  accent-soft: $brand-dark-bg,
+  focus-ring: rgba(91, 107, 255, 0.35),
+  danger: $red-dark-fg,
+  danger-bg: $red-dark-bg,
+  danger-field-bg: $red-dark-bg,
+  danger-text: $red-dark-fg,
+  danger-ink: #c79a93,
 
-  danger:            $red-dark-fg,
-  danger-bg:         $red-dark-bg,
-  danger-field-bg:   $red-dark-bg,
-  danger-text:       $red-dark-fg,
-  danger-ink:        #C79A93,
+  success: $green-dark-fg,
+  success-bg: $green-dark-bg,
+  success-field-bg: $green-dark-bg,
+  success-text: $green-dark-fg,
+  success-ink: #8fb79f,
 
-  success:           $green-dark-fg,
-  success-bg:        $green-dark-bg,
-  success-field-bg:  $green-dark-bg,
-  success-text:      $green-dark-fg,
-  success-ink:       #8FB79F,
+  warning: $amber-dark-fg,
+  warning-bg: $amber-dark-bg,
+  warning-text: $amber-dark-fg,
+  warning-ink: #c4a87a,
 
-  warning:           $amber-dark-fg,
-  warning-bg:        $amber-dark-bg,
-  warning-text:      $amber-dark-fg,
-  warning-ink:       #C4A87A,
-
-  info:              $brand-400,
-  info-bg:           $brand-dark-bg,
-  info-text:         #A8B2FF
+  info: $brand-400,
+  info-bg: $brand-dark-bg,
+  info-text: #a8b2ff,
 );
 
 @mixin emit-theme($theme) {
@@ -262,14 +341,20 @@ $theme-dark: (
   }
 }
 
-[data-theme="dark"] { @include emit-theme($theme-dark); }
+[data-theme='dark'] {
+  @include emit-theme($theme-dark);
+}
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { @include emit-theme($theme-dark); }
+  :root:not([data-theme='light']) {
+    @include emit-theme($theme-dark);
+  }
 }
 
 // Atalho: color(accent) → var(--dl-accent)
-@function color($name) { @return var(--dl-#{$name}); }
+@function color($name) {
+  @return var(--dl-#{$name});
+}
 
 // ------------------------------------------------------------
 // 5. MIXINS DE COMPONENTE (base para os componentes Angular)
@@ -292,22 +377,34 @@ $theme-dark: (
   border-radius: var(--dl-radius-md);
   padding: 0 $control-pad-x;
   height: $control-h-desktop;
-  transition: border-color 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background-color 120ms ease;
 
-  &::placeholder { color: color(text-disabled); }
-  &:hover:not(:disabled):not([readonly]) { border-color: color(border-hover); }
-  &:focus-visible { @include focus-ring(); }
+  &::placeholder {
+    color: color(text-disabled);
+  }
+  &:hover:not(:disabled):not([readonly]) {
+    border-color: color(border-hover);
+  }
+  &:focus-visible {
+    @include focus-ring();
+  }
 
-  &[aria-invalid="true"] {
+  &[aria-invalid='true'] {
     border-color: color(danger);
     background: color(danger-field-bg);
-    &:focus-visible { box-shadow: 0 0 0 var(--dl-ring-width) color(danger-bg); }
+    &:focus-visible {
+      box-shadow: 0 0 0 var(--dl-ring-width) color(danger-bg);
+    }
   }
-  &[data-state="success"] {
+  &[data-state='success'] {
     border-color: color(success);
     background: color(success-field-bg);
   }
-  &:disabled, &[readonly] {
+  &:disabled,
+  &[readonly] {
     color: color(text-disabled);
     background: color(surface-disabled);
     border-color: color(border-subtle);
@@ -315,15 +412,24 @@ $theme-dark: (
   }
 
   @media (max-width: $bp-tablet) {
-    @include type(body-lg);      // 16px: impede o zoom automático no iOS
+    @include type(body-lg); // 16px: impede o zoom automático no iOS
     height: $control-h-mobile;
   }
 }
 
 // --- Rótulo e mensagens ---------------------------------------
-@mixin field-label { @include type(label); color: color(text-secondary); }
-@mixin field-hint  { @include type(caption); color: color(text-secondary); }
-@mixin field-error { @include type(caption); color: color(danger-text); }
+@mixin field-label {
+  @include type(label);
+  color: color(text-secondary);
+}
+@mixin field-hint {
+  @include type(caption);
+  color: color(text-secondary);
+}
+@mixin field-error {
+  @include type(caption);
+  color: color(danger-text);
+}
 
 // --- Botão -----------------------------------------------------
 @mixin button-base {
@@ -339,23 +445,44 @@ $theme-dark: (
   border: 1px solid transparent;
   border-radius: var(--dl-radius-md);
   cursor: pointer;
-  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
 
-  &:focus-visible { @include focus-ring(); }
-  &[aria-busy="true"] { pointer-events: none; }
-  &:disabled { cursor: not-allowed; }
+  &:focus-visible {
+    @include focus-ring();
+  }
+  &[aria-busy='true'] {
+    pointer-events: none;
+  }
+  &:disabled {
+    cursor: not-allowed;
+  }
 
-  @media (max-width: $bp-tablet) { height: $control-h-mobile; width: 100%; }
+  @media (max-width: $bp-tablet) {
+    height: $control-h-mobile;
+    width: 100%;
+  }
 }
 
 @mixin button-primary {
   @include button-base;
   color: color(text-on-accent);
   background: color(accent);
-  &:hover:not(:disabled)  { background: color(accent-hover); }
-  &:active:not(:disabled) { background: color(accent-active); }
-  &[aria-busy="true"]     { background: color(accent-hover); }
-  &:disabled { color: color(text-disabled); background: color(surface-disabled); }
+  &:hover:not(:disabled) {
+    background: color(accent-hover);
+  }
+  &:active:not(:disabled) {
+    background: color(accent-active);
+  }
+  &[aria-busy='true'] {
+    background: color(accent-hover);
+  }
+  &:disabled {
+    color: color(text-disabled);
+    background: color(surface-disabled);
+  }
 }
 
 @mixin button-secondary {
@@ -364,9 +491,18 @@ $theme-dark: (
   color: color(text-primary);
   background: color(surface-raised);
   border-color: color(border-strong);
-  &:hover:not(:disabled)  { background: color(surface-sunken); border-color: color(border-hover); }
-  &:active:not(:disabled) { background: color(surface-disabled); }
-  &:disabled { color: color(text-disabled); background: color(surface); border-color: color(border-subtle); }
+  &:hover:not(:disabled) {
+    background: color(surface-sunken);
+    border-color: color(border-hover);
+  }
+  &:active:not(:disabled) {
+    background: color(surface-disabled);
+  }
+  &:disabled {
+    color: color(text-disabled);
+    background: color(surface);
+    border-color: color(border-subtle);
+  }
 }
 
 @mixin button-ghost {
@@ -374,8 +510,14 @@ $theme-dark: (
   font-weight: $fw-medium;
   color: color(accent);
   background: transparent;
-  &:hover:not(:disabled)  { color: color(accent-active); background: color(accent-soft); }
-  &:disabled { color: color(text-disabled); background: transparent; }
+  &:hover:not(:disabled) {
+    color: color(accent-active);
+    background: color(accent-soft);
+  }
+  &:disabled {
+    color: color(text-disabled);
+    background: transparent;
+  }
 }
 
 // --- Alerta (erro de servidor, aviso, sucesso) -----------------
@@ -388,17 +530,54 @@ $theme-dark: (
   border-radius: var(--dl-radius-sm);
   border-left: 3px solid;
 
-  .dl-alert__title { @include type(body-sm); font-weight: $fw-semibold; }
-  .dl-alert__text  { @include type(caption); }
+  .dl-alert__title {
+    @include type(body-sm);
+    font-weight: $fw-semibold;
+  }
+  .dl-alert__text {
+    @include type(caption);
+  }
 
-  &[data-tone="danger"]  { background: color(danger-bg);  border-left-color: color(danger);
-    .dl-alert__title { color: color(danger-text); }  .dl-alert__text { color: color(danger-ink); } }
-  &[data-tone="success"] { background: color(success-bg); border-left-color: color(success);
-    .dl-alert__title { color: color(success-text); } .dl-alert__text { color: color(success-ink); } }
-  &[data-tone="warning"] { background: color(warning-bg); border-left-color: color(warning);
-    .dl-alert__title { color: color(warning-text); } .dl-alert__text { color: color(warning-ink); } }
-  &[data-tone="info"]    { background: color(info-bg);    border-left-color: color(info);
-    .dl-alert__title { color: color(info-text); }    .dl-alert__text { color: color(text-secondary); } }
+  &[data-tone='danger'] {
+    background: color(danger-bg);
+    border-left-color: color(danger);
+    .dl-alert__title {
+      color: color(danger-text);
+    }
+    .dl-alert__text {
+      color: color(danger-ink);
+    }
+  }
+  &[data-tone='success'] {
+    background: color(success-bg);
+    border-left-color: color(success);
+    .dl-alert__title {
+      color: color(success-text);
+    }
+    .dl-alert__text {
+      color: color(success-ink);
+    }
+  }
+  &[data-tone='warning'] {
+    background: color(warning-bg);
+    border-left-color: color(warning);
+    .dl-alert__title {
+      color: color(warning-text);
+    }
+    .dl-alert__text {
+      color: color(warning-ink);
+    }
+  }
+  &[data-tone='info'] {
+    background: color(info-bg);
+    border-left-color: color(info);
+    .dl-alert__title {
+      color: color(info-text);
+    }
+    .dl-alert__text {
+      color: color(text-secondary);
+    }
+  }
 }
 
 // --- Campo de código (OTP) ------------------------------------
@@ -410,7 +589,13 @@ $theme-dark: (
   width: 64px;
   height: 72px;
   padding: 0;
-  @media (max-width: $bp-tablet) { flex: 1; min-width: 0; width: auto; height: 64px; font-size: 24px; }
+  @media (max-width: $bp-tablet) {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+    height: 64px;
+    font-size: 24px;
+  }
 }
 
 // --- Medidor de força de senha --------------------------------
@@ -420,12 +605,22 @@ $theme-dark: (
   grid-template-columns: repeat(4, 1fr);
   gap: space(1) + 2px;
 
-  .dl-strength__seg { height: 4px; border-radius: 2px; background: color(border-subtle); }
-  &[data-level="1"] .dl-strength__seg:nth-child(-n+1),
-  &[data-level="2"] .dl-strength__seg:nth-child(-n+2) { background: color(warning); }
-  &[data-level="1"] .dl-strength__seg:nth-child(-n+1) { background: color(danger); }
-  &[data-level="3"] .dl-strength__seg:nth-child(-n+3),
-  &[data-level="4"] .dl-strength__seg { background: color(success); }
+  .dl-strength__seg {
+    height: 4px;
+    border-radius: 2px;
+    background: color(border-subtle);
+  }
+  &[data-level='1'] .dl-strength__seg:nth-child(-n + 1),
+  &[data-level='2'] .dl-strength__seg:nth-child(-n + 2) {
+    background: color(warning);
+  }
+  &[data-level='1'] .dl-strength__seg:nth-child(-n + 1) {
+    background: color(danger);
+  }
+  &[data-level='3'] .dl-strength__seg:nth-child(-n + 3),
+  &[data-level='4'] .dl-strength__seg {
+    background: color(success);
+  }
 }
 
 // --- Shell das telas de auth ----------------------------------
@@ -454,10 +649,12 @@ $theme-dark: (
   }
 
   @media (max-width: $bp-desktop) {
-    .dl-auth__aside { display: none; }                       // mobile: só o formulário
-    .dl-auth__form  {
+    .dl-auth__aside {
+      display: none;
+    } // mobile: só o formulário
+    .dl-auth__form {
       flex: 1;
-      justify-content: flex-end;                             // conteúdo ao alcance do polegar
+      justify-content: flex-end; // conteúdo ao alcance do polegar
       gap: space(6);
       padding: space(8) space(6) space(10);
       border-right: none;

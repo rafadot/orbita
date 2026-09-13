@@ -1,0 +1,63 @@
+@use 'tokens' as tokens;
+
+:host {
+  @include tokens.auth-shell;
+}
+
+.dl-auth__rodape {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: tokens.space(2);
+  @include tokens.type(body-sm);
+  color: tokens.color(text-secondary);
+}
+
+.dl-auth__aside-topo {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(6);
+}
+
+.dl-auth__headline {
+  @include tokens.type(display-md);
+  color: tokens.color(text-primary);
+  max-width: 440px;
+  text-wrap: pretty;
+}
+
+.dl-auth__subtexto {
+  @include tokens.type(body);
+  color: tokens.color(text-secondary);
+  max-width: 400px;
+}
+
+.dl-auth__lista {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid tokens.color(border);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dl-auth__item {
+  display: flex;
+  gap: tokens.space(4);
+  padding: 18px 0;
+  border-bottom: 1px solid tokens.color(border);
+}
+
+.dl-auth__numero {
+  font-family: tokens.$font-mono;
+  font-size: 11px;
+  color: tokens.color(accent);
+  width: 28px;
+  flex: none;
+}
+
+.dl-auth__texto {
+  @include tokens.type(body-sm);
+  color: tokens.color(text-body);
+}

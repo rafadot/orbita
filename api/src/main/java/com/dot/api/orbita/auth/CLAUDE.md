@@ -16,7 +16,7 @@ Refresh token opaco + rotação: [ADR 0005](../../../../../../../../../docs/adr/
 | `POST /auth/email/confirmar` | `204` | `400` token ausente (corpo traz `erros`) ou inválido/expirado/usado |
 | `POST /auth/email/reenviar` | `202` (sempre, anti-enumeração) | — |
 | `POST /auth/login` | `200 TokensResponse` | `401` + `tentativasRestantes`, `423` + `bloqueadoAte`, `403` e-mail não verificado |
-| `POST /auth/renovar` | `200 TokensResponse` | `401` token inválido/expirado/revogado |
+| `POST /auth/renovar` | `200 TokensResponse` | `400` token inválido/expirado/revogado |
 | `POST /auth/logout` | `204` (idempotente) | — |
 | `GET /me` | `200 UsuarioResponse` | `401` |
 
@@ -33,7 +33,12 @@ Refresh token opaco + rotação: [ADR 0005](../../../../../../../../../docs/adr/
   cooldown (1 min) não geram erro nem sinal distinguível pro cliente.
 - **Reuso de refresh token já rotacionado** (`AutenticacaoService.renovarTokens`)
   revoga **todos** os tokens do usuário — tratado como sinal de roubo, não
-  como erro comum de token expirado.
+  como erro comum de token expirado. O método é
+  `@Transactional(noRollbackFor = TokenInvalidoException.class)` de
+  propósito: sem isso, o rollback padrão do Spring pra exceção não
+  verificada desfaria a própria revogação de segurança (bug real,
+  encontrado só via curl — invisível a teste unitário Mockito, que não
+  exercita o proxy transacional real).
 - `GET /me` (`PerfilController.buscarUsuarioAutenticado`) é o único lugar
   com `findById` direto num endpoint — seguro porque o id vem de
   `UsuarioAtual.id()` (claim `sub` do JWT), nunca de input do cliente. O
@@ -53,7 +58,12 @@ Refresh token opaco + rotação: [ADR 0005](../../../../../../../../../docs/adr/
 A tabela acima é o resumo do contrato; o detalhe (descrição de cada erro,
 exemplos de request/response) vive nas anotações `@Operation`/`@ApiResponse`
 dos controllers e `@Schema` dos DTOs — ver [ADR 0007](../../../../../../../../../docs/adr/0007-openapi-via-springdoc.md).
-Mudar um contrato exige mudar os dois. Todo `400` de validação de corpo
+Mudar um contrato exige mudar os dois. Este contrato já mudou de forma
+incompatível duas vezes nesta fase pré-lançamento (JSON → cookie → JSON de
+novo, ver [ADR 0009](../../../../../../../../../docs/adr/0009-sessao-bearer-storage-local.md))
+sem depreciar nada — não há consumidor real ainda. A regra geral de nunca
+quebrar contrato sem depreciar (`../../../../../../../../CLAUDE.md`) volta
+a valer sem exceção a partir do primeiro consumidor real. Todo `400` de validação de corpo
 (campo com `@NotBlank`/`@Email`/`@SenhaForte`... vazio ou inválido) segue o
 formato central do `GlobalExceptionHandler` (`core/CLAUDE.md`): extensão
 `erros: [{campo, mensagem}]`, sem exceção específica por endpoint.

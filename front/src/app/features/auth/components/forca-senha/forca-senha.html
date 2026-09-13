@@ -1,0 +1,14 @@
+<div class="forca-senha" [attr.data-level]="forca().nivel">
+  <span class="dl-strength__seg"></span>
+  <span class="dl-strength__seg"></span>
+  <span class="dl-strength__seg"></span>
+  <span class="dl-strength__seg"></span>
+</div>
+<div class="forca-senha__legenda">
+  <span class="forca-senha__rotulo" [attr.data-nivel]="forca().nivel"
+    >Força: {{ forca().rotulo }}</span
+  >
+  @if (forca().dica) {
+    <span class="forca-senha__dica">{{ forca().dica }}</span>
+  }
+</div>

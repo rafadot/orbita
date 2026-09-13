@@ -1,0 +1,29 @@
+<div class="dl-auth__form">
+  <app-logo />
+
+  <div class="dl-auth__conteudo">
+    <ng-content select="[conteudo]" />
+  </div>
+
+  <div class="dl-auth__rodape">
+    <ng-content select="[rodape]" />
+  </div>
+</div>
+
+<div class="dl-auth__aside">
+  <div class="dl-auth__aside-topo">
+    <div class="dl-auth__headline">{{ asideHeadline() }}</div>
+    <div class="dl-auth__subtexto">{{ asideTexto() }}</div>
+  </div>
+
+  @if (itensAside().length) {
+    <ol class="dl-auth__lista">
+      @for (item of itensAside(); track item.texto) {
+        <li class="dl-auth__item">
+          <span class="dl-auth__numero">{{ item.numero }}</span>
+          <span class="dl-auth__texto">{{ item.texto }}</span>
+        </li>
+      }
+    </ol>
+  }
+</div>

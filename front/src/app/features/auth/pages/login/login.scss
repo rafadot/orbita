@@ -1,0 +1,117 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: contents;
+}
+
+.login__conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(9);
+}
+
+.login__cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(2);
+}
+
+.login__eyebrow {
+  @include tokens.type(eyebrow);
+  color: tokens.color(accent);
+}
+
+.login__titulo {
+  @include tokens.type(display-lg);
+  color: tokens.color(text-primary);
+  margin: 0;
+
+  @media (max-width: tokens.$bp-desktop) {
+    @include tokens.type(h1);
+  }
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(5);
+}
+
+.login__campo {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(2);
+}
+
+.login__rotulo {
+  @include tokens.field-label;
+}
+
+.login__input {
+  @include tokens.input-base;
+}
+
+.login__erro {
+  @include tokens.field-error;
+}
+
+.login__linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: tokens.space(2);
+}
+
+.login__link-secundario {
+  @include tokens.type(body-sm);
+  color: tokens.color(text-disabled);
+  cursor: not-allowed;
+}
+
+.login__acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.login__divisor {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  span:first-child,
+  span:last-child {
+    flex: 1;
+    height: 1px;
+    background: tokens.color(border-subtle);
+  }
+
+  span:nth-child(2) {
+    @include tokens.type(label);
+    color: tokens.color(text-muted);
+  }
+}
+
+.login__social {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: tokens.$bp-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.login__rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+}
+
+.login__versao {
+  font-family: tokens.$font-mono;
+  font-size: 11px;
+  color: tokens.color(text-disabled);
+}
