@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { ErroApi } from '../../../../core/api/erro-api.model';
 import { Alerta } from '../../../../shared/ui/alerta/alerta';
 import { AuthService } from '../../auth.service';
 import { AuthShell } from '../../components/auth-shell/auth-shell';
@@ -57,6 +58,7 @@ export class ConfirmarEmail implements OnInit {
   protected readonly reenviando = signal(false);
   protected readonly reenviado = signal(false);
   protected readonly segundosRestantes = signal(0);
+  protected readonly erroServidor = signal<ErroApi | null>(null);
 
   protected readonly formEmail = this.fb.group({
     email: this.fb.control('', [Validators.required, Validators.email]),
@@ -111,6 +113,7 @@ export class ConfirmarEmail implements OnInit {
   private reenviar(emailAlvo: string): void {
     this.reenviando.set(true);
     this.reenviado.set(false);
+    this.erroServidor.set(null);
     this.authService.reenviarConfirmacao(emailAlvo).subscribe({
       next: () => {
         this.reenviando.set(false);
@@ -119,18 +122,25 @@ export class ConfirmarEmail implements OnInit {
         definirEmailPendente(emailAlvo);
         this.iniciarContador();
       },
-      error: () => this.reenviando.set(false),
+      error: (erro: ErroApi) => {
+        this.reenviando.set(false);
+        this.erroServidor.set(erro);
+      },
     });
   }
 
   private confirmarToken(token: string): void {
     this.modo.set('confirmando');
+    this.erroServidor.set(null);
     this.authService.confirmarEmail(token).subscribe({
       next: () => {
         this.modo.set('confirmado');
         limparEmailPendente();
       },
-      error: () => this.modo.set('erro-token'),
+      error: (erro: ErroApi) => {
+        this.erroServidor.set(erro);
+        this.modo.set('erro-token');
+      },
     });
   }
 

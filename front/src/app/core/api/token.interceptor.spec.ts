@@ -44,4 +44,14 @@ describe('tokenInterceptor', () => {
     expect(requisicao.request.headers.has('Authorization')).toBe(false);
     requisicao.flush({});
   });
+
+  it('nao deve anexar Authorization em /auth/** mesmo com token guardado', () => {
+    localStorage.setItem('orbita.tokenAcesso', 'token-acesso');
+
+    http.post(`${environment.apiUrl}/auth/login`, {}).subscribe();
+
+    const requisicao = httpTesting.expectOne(`${environment.apiUrl}/auth/login`);
+    expect(requisicao.request.headers.has('Authorization')).toBe(false);
+    requisicao.flush({});
+  });
 });

@@ -28,8 +28,8 @@
           @if (modo() === 'confirmando') {
             <p class="confirmar-email__texto">Confirmando seu e-mail…</p>
           } @else if (modo() === 'erro-token') {
-            <app-alerta tom="danger" titulo="Este link expirou">
-              Peça um novo link para confirmar seu e-mail.
+            <app-alerta tom="danger" titulo="Não foi possível confirmar seu e-mail">
+              {{ erroServidor()?.detalhe ?? 'Peça um novo link para confirmar seu e-mail.' }}
             </app-alerta>
           } @else if (email()) {
             <p class="confirmar-email__texto">
@@ -53,6 +53,9 @@
 
             @if (reenviado()) {
               <app-alerta tom="success">Link reenviado para {{ email() }}</app-alerta>
+            }
+            @if (erroServidor(); as erro) {
+              <app-alerta tom="danger" [titulo]="erro.titulo">{{ erro.detalhe }}</app-alerta>
             }
 
             @if (reenviando()) {
@@ -120,6 +123,9 @@
             </button>
             @if (reenviado()) {
               <app-alerta tom="success">Link enviado, se o e-mail estiver cadastrado.</app-alerta>
+            }
+            @if (erroServidor(); as erro) {
+              <app-alerta tom="danger" [titulo]="erro.titulo">{{ erro.detalhe }}</app-alerta>
             }
           </form>
         }

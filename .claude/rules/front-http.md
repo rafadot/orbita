@@ -20,7 +20,13 @@ fechar o navegador; desmarcado → `sessionStorage`, some ao fechar).
 1. `erroApiInterceptor` — normaliza toda resposta de erro pra `ErroApi`
    (`core/api/erro-api.model.ts`).
 2. `tokenInterceptor` — anexa `Authorization: Bearer` quando há token
-   guardado.
+   guardado, exceto em `/auth/**` (todos `permitAll` na API, nenhum usa
+   Bearer). Bug real já causado por não excluir `/auth/**`: um token de
+   acesso velho guardado do lado do front fazia o resource server do
+   Spring rejeitar até `/auth/login` com `401` vazio antes do controller,
+   mascarando o `problem+json` real ("E-mail ou senha incorretos.") com
+   "Sua sessão expirou." (mensagem do `erroApiInterceptor` pra 401 sem
+   corpo).
 3. `renovarSessaoInterceptor` — um 401 fora de `/auth/**` tenta
    `SessaoService.renovar()` uma vez e repete a requisição já com o token
    novo (`next(request)` não passa de novo por `tokenInterceptor`, então o

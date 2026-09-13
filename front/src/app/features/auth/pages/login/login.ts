@@ -60,6 +60,7 @@ export class Login {
   protected aoSubmeter(): void {
     this.formSubmetido.set(true);
     this.erroServidor.set(null);
+    this.mensagemSecundaria.set(undefined);
     if (this.form.invalid) {
       return;
     }

@@ -16,7 +16,10 @@
     <form class="login__form" [formGroup]="form" (ngSubmit)="aoSubmeter()" novalidate>
       @if (erroServidor(); as erro) {
         <app-alerta tom="danger" [titulo]="erro.titulo">
-          {{ mensagemSecundaria() ?? erro.detalhe }}
+          {{ erro.detalhe }}
+          @if (mensagemSecundaria(); as secundaria) {
+            <div>{{ secundaria }}</div>
+          }
         </app-alerta>
       }
       @if (sucesso()) {
