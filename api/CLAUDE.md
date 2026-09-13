@@ -105,6 +105,19 @@ Fora desta rodada (próxima): esqueci/redefinir senha, histórico de senha,
 design: ver [`.claude/rules/api-auth.md`](../.claude/rules/api-auth.md) e
 [`../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md`](../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md).
 
+## Documentação OpenAPI
+
+`springdoc-openapi-starter-webmvc-ui` (3.x, compatível com Boot 4/Jackson 3).
+Só exposta com profile `local` (`springdoc.api-docs.enabled` /
+`springdoc.swagger-ui.enabled=false` na base, `true` em
+`application-local.properties`) — ver
+[ADR 0007](../docs/adr/0007-openapi-via-springdoc.md). Com o profile ativo:
+Swagger UI em `/swagger-ui.html`, spec em `/v3/api-docs`. Endpoint novo
+sempre ganha `@Operation` + `@ApiResponses` (erros de domínio incluídos);
+controller público (sem autenticação) declara `@SecurityRequirements`
+vazio na classe, como `AutenticacaoController`. Bean central em
+`core/config/OpenApiConfig`.
+
 ## Convenções de código
 
 Resumo (regra completa e motivos em
@@ -132,7 +145,8 @@ tocar `api/src/main/java/**`):
   [0002 JWT sem lib](../docs/adr/0002-jwt-stateless-sem-lib-externa.md),
   [0004 protótipo auth](../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md),
   [0005 refresh token](../docs/adr/0005-refresh-token-opaco-com-rotacao.md),
-  [0006 config](../docs/adr/0006-config-base-mais-application-local.md)
+  [0006 config](../docs/adr/0006-config-base-mais-application-local.md),
+  [0007 OpenAPI](../docs/adr/0007-openapi-via-springdoc.md)
 - Rules (auto-carregadas por glob): `api-codigo.md`, `api-config.md`,
   `api-migrations.md`, `api-tests.md`, `api-auth.md` em [`../.claude/rules/`](../.claude/rules/)
 - Skill `revisar-sonar` — ao receber apontamentos do Sonar

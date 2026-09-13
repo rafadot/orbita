@@ -50,6 +50,11 @@ Refresh token opaco + rotação: [ADR 0005](../../../../../../../../../docs/adr/
   `registrarTentativaFalha`, `validarTokenNaoReutilizado`...) — ler o método
   público é ler a sequência. Regra geral em `.claude/rules/api-codigo.md`.
 
+A tabela acima é o resumo do contrato; o detalhe (descrição de cada erro,
+exemplos de request/response) vive nas anotações `@Operation`/`@ApiResponses`
+dos controllers e `@Schema` dos DTOs — ver [ADR 0007](../../../../../../../../../docs/adr/0007-openapi-via-springdoc.md).
+Mudar um contrato exige mudar os dois.
+
 ## Fora do escopo desta rodada
 
 Esqueci/redefinir senha, histórico de senha, 2FA, login social — ver

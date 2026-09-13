@@ -36,7 +36,10 @@ comportamento esperado.
 altera), `open-in-view=false`, `spring.mvc.problemdetails.enabled=true`
 (erros nativos do MVC também em RFC 9457), `orbita.auth.*`
 (`ORBITA_JWT_SECRET` + durações), `orbita.frontend-url`
-(`ORBITA_FRONTEND_URL`).
+(`ORBITA_FRONTEND_URL`), `springdoc.api-docs.enabled` /
+`springdoc.swagger-ui.enabled=false` — documentação OpenAPI só em local
+(ver [ADR 0007](../../docs/adr/0007-openapi-via-springdoc.md)), por isso
+são `false`/`true` fixos, não `${VAR}`.
 
 Durações em ISO-8601 (`PT15M` = 15 min, `P1D` = 1 dia; `M` depois de `T` é
 minuto). Bindam em `java.time.Duration` nos records de `core/config`.
@@ -47,8 +50,9 @@ Se criar do zero: `spring.datasource.url/username/password`,
 `orbita.auth.jwt-secret` (≥ 32 bytes), `orbita.frontend-url`,
 `spring.docker.compose.enabled=true`, `spring.mail.host=localhost`,
 `spring.mail.port=1025`, `spring.mail.properties.mail.smtp.auth=false`,
-`spring.mail.properties.mail.smtp.starttls.enable=false`. Nova `${VAR}`
-na base ⇒ nova linha aqui.
+`spring.mail.properties.mail.smtp.starttls.enable=false`,
+`springdoc.api-docs.enabled=true`, `springdoc.swagger-ui.enabled=true`.
+Nova `${VAR}` na base ⇒ nova linha aqui.
 
 ## Records de config (`core/config`)
 

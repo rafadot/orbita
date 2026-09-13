@@ -27,3 +27,4 @@ O que isso implica na prática, incluindo trade-offs aceitos (≤ 10 linhas).
 - [0004 — Protótipo de autenticação (Claude Design) como fonte de verdade](0004-prototipo-autenticacao-fonte-de-verdade.md)
 - [0005 — Refresh token opaco com rotação, guardado hasheado](0005-refresh-token-opaco-com-rotacao.md)
 - [0006 — Config: base prod-ready + `application-local.properties` gitignored](0006-config-base-mais-application-local.md)
+- [0007 — Documentação OpenAPI via springdoc, só em ambiente local](0007-openapi-via-springdoc.md)
