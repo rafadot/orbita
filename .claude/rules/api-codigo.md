@@ -71,11 +71,12 @@ quando não for óbvio.
 - Nova `@ConfigurationProperties` (record) precisa ser registrada em
   `@EnableConfigurationProperties` na `OrbitaApplication` — não é
   auto-descoberta.
-- Endpoint novo ganha `@Operation` + `@ApiResponses` cobrindo cada erro de
-  domínio possível (não só o sucesso); DTO novo ganha `@Schema` por campo.
-  Controller sem autenticação (como `AutenticacaoController`) declara
-  `@SecurityRequirements` vazio na classe — ver
-  [ADR 0007](../../docs/adr/0007-openapi-via-springdoc.md).
+- Endpoint novo ganha `@Operation` + `@ApiResponse` (repetido direto no
+  método — `@Repeatable`, nunca envolto em `@ApiResponses`, Sonar aponta o
+  wrapper) cobrindo cada erro de domínio possível (não só o sucesso); DTO
+  novo ganha `@Schema` por campo. Controller sem autenticação (como
+  `AutenticacaoController`) declara `@SecurityRequirements` vazio na
+  classe — ver [ADR 0007](../../docs/adr/0007-openapi-via-springdoc.md).
 
 ## Antes de entregar
 

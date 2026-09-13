@@ -11,7 +11,6 @@ import com.dot.api.orbita.auth.service.AutenticacaoService;
 import com.dot.api.orbita.auth.service.CadastroService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -37,11 +36,10 @@ public class AutenticacaoController {
     @PostMapping("/cadastro")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Cadastra um novo usuário e dispara e-mail de confirmação")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Usuário criado"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos (e-mail, senha fraca ou termos não aceitos)"),
-            @ApiResponse(responseCode = "409", description = "E-mail já cadastrado")
-    })
+    @ApiResponse(responseCode = "201", description = "Usuário criado")
+    @ApiResponse(responseCode = "400",
+            description = "Dados inválidos (e-mail, senha fraca ou termos não aceitos) — corpo traz `erros` com campo e mensagem")
+    @ApiResponse(responseCode = "409", description = "E-mail já cadastrado")
     public void cadastrar(@Valid @RequestBody CadastroRequest request) {
         cadastroService.cadastrar(request.nome(), request.email(), request.senha(), request.aceitouTermos());
     }
@@ -49,10 +47,9 @@ public class AutenticacaoController {
     @PostMapping("/email/confirmar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Confirma o e-mail do usuário a partir do token recebido por e-mail")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "E-mail confirmado"),
-            @ApiResponse(responseCode = "400", description = "Token inválido, expirado ou já usado")
-    })
+    @ApiResponse(responseCode = "204", description = "E-mail confirmado")
+    @ApiResponse(responseCode = "400",
+            description = "Token ausente/em branco (corpo traz `erros`), inválido, expirado ou já usado")
     public void confirmarEmail(@Valid @RequestBody ConfirmarEmailRequest request) {
         cadastroService.confirmarEmail(request.token());
     }
@@ -62,10 +59,8 @@ public class AutenticacaoController {
     @Operation(summary = "Reenvia o e-mail de confirmação",
             description = "Sempre responde 202, mesmo se o e-mail não existir, já estiver confirmado ou o "
                     + "reenvio estiver dentro do cooldown — resposta idêntica em todos os casos (anti-enumeração).")
-    @ApiResponses({
-            @ApiResponse(responseCode = "202", description = "Aceito (não garante envio)"),
-            @ApiResponse(responseCode = "400", description = "E-mail inválido")
-    })
+    @ApiResponse(responseCode = "202", description = "Aceito (não garante envio)")
+    @ApiResponse(responseCode = "400", description = "E-mail ausente/em branco ou inválido — corpo traz `erros`")
     public void reenviarConfirmacao(@Valid @RequestBody ReenviarConfirmacaoRequest request) {
         cadastroService.reenviarConfirmacao(request.email());
     }
@@ -75,13 +70,11 @@ public class AutenticacaoController {
             description = "E-mail inexistente responde como senha incorreta, com `tentativasRestantes` fixo no "
                     + "máximo (anti-enumeração). Conta bloqueada responde 423 antes de checar a senha. E-mail não "
                     + "confirmado só é revelado depois da senha correta.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Autenticado"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "401", description = "E-mail ou senha incorretos (corpo traz `tentativasRestantes`)"),
-            @ApiResponse(responseCode = "403", description = "E-mail ainda não confirmado"),
-            @ApiResponse(responseCode = "423", description = "Conta bloqueada por excesso de tentativas (corpo traz `bloqueadoAte`)")
-    })
+    @ApiResponse(responseCode = "200", description = "Autenticado")
+    @ApiResponse(responseCode = "400", description = "Dados inválidos — corpo traz `erros` com campo e mensagem")
+    @ApiResponse(responseCode = "401", description = "E-mail ou senha incorretos (corpo traz `tentativasRestantes`)")
+    @ApiResponse(responseCode = "403", description = "E-mail ainda não confirmado")
+    @ApiResponse(responseCode = "423", description = "Conta bloqueada por excesso de tentativas (corpo traz `bloqueadoAte`)")
     public ResponseEntity<TokensResponse> login(@Valid @RequestBody LoginRequest request) {
         TokensResponse tokens = autenticacaoService.autenticar(
                 request.email(), request.senha(), request.manterConectado());
@@ -92,11 +85,9 @@ public class AutenticacaoController {
     @Operation(summary = "Troca um refresh token válido por um novo par de tokens",
             description = "O refresh token é rotacionado a cada uso. Reutilizar um refresh token já rotacionado "
                     + "é tratado como sinal de roubo: revoga todos os tokens do usuário.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Tokens renovados"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "401", description = "Token de atualização inválido, expirado ou revogado")
-    })
+    @ApiResponse(responseCode = "200", description = "Tokens renovados")
+    @ApiResponse(responseCode = "400", description = "Dados inválidos — corpo traz `erros` com campo e mensagem")
+    @ApiResponse(responseCode = "401", description = "Token de atualização inválido, expirado ou revogado")
     public ResponseEntity<TokensResponse> renovar(@Valid @RequestBody RenovarRequest request) {
         TokensResponse tokens = autenticacaoService.renovarTokens(request.tokenAtualizacao());
         return ResponseEntity.ok(tokens);
@@ -105,10 +96,8 @@ public class AutenticacaoController {
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Revoga o refresh token informado", description = "Idempotente — token já revogado ou inexistente também responde 204.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Sessão encerrada"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos")
-    })
+    @ApiResponse(responseCode = "204", description = "Sessão encerrada")
+    @ApiResponse(responseCode = "400", description = "Dados inválidos — corpo traz `erros` com campo e mensagem")
     public void logout(@Valid @RequestBody LogoutRequest request) {
         autenticacaoService.sair(request.tokenAtualizacao());
     }

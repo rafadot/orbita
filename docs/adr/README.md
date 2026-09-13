@@ -28,3 +28,4 @@ O que isso implica na prática, incluindo trade-offs aceitos (≤ 10 linhas).
 - [0005 — Refresh token opaco com rotação, guardado hasheado](0005-refresh-token-opaco-com-rotacao.md)
 - [0006 — Config: base prod-ready + `application-local.properties` gitignored](0006-config-base-mais-application-local.md)
 - [0007 — Documentação OpenAPI via springdoc, só em ambiente local](0007-openapi-via-springdoc.md)
+- [0008 — Erros HTTP sempre em pt-BR, validação com lista de campos](0008-erros-http-em-pt-br-com-lista-de-campos.md)

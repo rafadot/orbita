@@ -6,7 +6,6 @@ import com.dot.api.orbita.auth.service.AutenticacaoService;
 import com.dot.api.orbita.core.security.UsuarioAtual;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +21,8 @@ public class PerfilController {
 
     @GetMapping("/me")
     @Operation(summary = "Retorna o usuário autenticado atual")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Usuário autenticado"),
-            @ApiResponse(responseCode = "401", description = "Token de acesso ausente, inválido ou expirado")
-    })
+    @ApiResponse(responseCode = "200", description = "Usuário autenticado")
+    @ApiResponse(responseCode = "401", description = "Token de acesso ausente, inválido ou expirado")
     public UsuarioResponse buscarUsuarioAutenticado() {
         Usuario usuario = autenticacaoService.buscarUsuarioAtual(usuarioAtual.id());
         return new UsuarioResponse(

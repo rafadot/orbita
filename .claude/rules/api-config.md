@@ -34,7 +34,9 @@ comportamento esperado.
 `spring.datasource.*` (`DB_URL`, `DB_USERNAME`, `DB_PASSWORD`),
 `ddl-auto=validate` (Flyway é dono do schema; `validate` só confere, não
 altera), `open-in-view=false`, `spring.mvc.problemdetails.enabled=true`
-(erros nativos do MVC também em RFC 9457), `orbita.auth.*`
+(erros nativos do MVC também em RFC 9457), `spring.mvc.locale=pt-BR` +
+`spring.mvc.locale-resolver=fixed` (mensagens de validação/erro sempre
+pt-BR, não dependem do `Accept-Language` do cliente), `orbita.auth.*`
 (`ORBITA_JWT_SECRET` + durações), `orbita.frontend-url`
 (`ORBITA_FRONTEND_URL`), `springdoc.api-docs.enabled` /
 `springdoc.swagger-ui.enabled=false` — documentação OpenAPI só em local

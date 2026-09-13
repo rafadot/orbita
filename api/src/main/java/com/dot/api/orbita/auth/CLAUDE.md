@@ -12,8 +12,8 @@ Refresh token opaco + rotação: [ADR 0005](../../../../../../../../../docs/adr/
 
 | Método/Path | Sucesso | Erros |
 |---|---|---|
-| `POST /auth/cadastro` | `201` | `400` validação, `409` e-mail já cadastrado |
-| `POST /auth/email/confirmar` | `204` | `400` token inválido/expirado/usado |
+| `POST /auth/cadastro` | `201` | `400` validação (corpo traz `erros`), `409` e-mail já cadastrado |
+| `POST /auth/email/confirmar` | `204` | `400` token ausente (corpo traz `erros`) ou inválido/expirado/usado |
 | `POST /auth/email/reenviar` | `202` (sempre, anti-enumeração) | — |
 | `POST /auth/login` | `200 TokensResponse` | `401` + `tentativasRestantes`, `423` + `bloqueadoAte`, `403` e-mail não verificado |
 | `POST /auth/renovar` | `200 TokensResponse` | `401` token inválido/expirado/revogado |
@@ -51,9 +51,12 @@ Refresh token opaco + rotação: [ADR 0005](../../../../../../../../../docs/adr/
   público é ler a sequência. Regra geral em `.claude/rules/api-codigo.md`.
 
 A tabela acima é o resumo do contrato; o detalhe (descrição de cada erro,
-exemplos de request/response) vive nas anotações `@Operation`/`@ApiResponses`
+exemplos de request/response) vive nas anotações `@Operation`/`@ApiResponse`
 dos controllers e `@Schema` dos DTOs — ver [ADR 0007](../../../../../../../../../docs/adr/0007-openapi-via-springdoc.md).
-Mudar um contrato exige mudar os dois.
+Mudar um contrato exige mudar os dois. Todo `400` de validação de corpo
+(campo com `@NotBlank`/`@Email`/`@SenhaForte`... vazio ou inválido) segue o
+formato central do `GlobalExceptionHandler` (`core/CLAUDE.md`): extensão
+`erros: [{campo, mensagem}]`, sem exceção específica por endpoint.
 
 ## Fora do escopo desta rodada
 

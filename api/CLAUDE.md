@@ -15,10 +15,9 @@ Spring Mail, Argon2 (`bcprov-jdk18on`), JaCoCo. Módulo Maven único
 
 Dois arquivos: `application.properties` (base, prod-ready, só `${VAR}` sem
 default) + `application-local.properties` (gitignored, valores reais +
-Mailpit/docker-compose). Roda com profile `local`. Modelo completo, o que
-**não** fazer e checklist do local em
-[`.claude/rules/api-config.md`](../.claude/rules/api-config.md) / ADR 0006.
-Mailpit: UI em `http://localhost:8025`, exige Docker rodando.
+Mailpit/docker-compose). Roda com profile `local`. Modelo completo e
+checklist em [`api-config.md`](../.claude/rules/api-config.md) / ADR 0006.
+Mailpit: `http://localhost:8025` (exige Docker).
 
 ## Comandos
 
@@ -77,11 +76,12 @@ diretamente — só através de um serviço exposto publicamente (interface em
 
 ## Erros
 
-Um único `GlobalExceptionHandler` (`core/error`) traduzindo exceções de
-domínio (`ExcecaoDominio` e subclasses — `NaoEncontradoException`,
-`ConflitoException`, mais as específicas de cada módulo, ex.:
-`CredenciaisInvalidasException` em `auth`) para `ProblemDetail` (RFC 9457,
-nativo do Spring). Nunca stack trace cru na resposta.
+Um único `GlobalExceptionHandler` (`core/error`) traduz exceção de domínio
+(`ExcecaoDominio` e subclasses) **e** nativa do Spring (validação, parse de
+JSON...) pra `ProblemDetail` (RFC 9457), sempre em **pt-BR** — `title`
+central por status, `detail` via `messages.properties` com locale fixo,
+400 de validação com extensão `erros: [{campo, mensagem}]`. Nunca stack
+trace cru. Mecanismo linha a linha: [`core/CLAUDE.md`](src/main/java/com/dot/api/orbita/core/CLAUDE.md).
 
 ## Segurança
 
@@ -94,28 +94,19 @@ Sonar marca isso como hotspot de segurança (S4502); é esperado (API
 stateless sem cookie de sessão, não há CSRF a proteger) e deve ser
 revisado como "Safe" direto no SonarQube, não silenciado em código.
 
-Módulo `auth` implementado nesta rodada: cadastro, confirmação de e-mail
-(+ reenvio com cooldown), login com bloqueio por tentativas, refresh com
-rotação, logout, `GET /me`. Contrato HTTP completo e regras não óbvias
-(ordem de checagem no login, anti-enumeração, reuso de refresh token) em
-[`auth/CLAUDE.md`](src/main/java/com/dot/api/orbita/auth/CLAUDE.md).
-Fora desta rodada (próxima): esqueci/redefinir senha, histórico de senha,
-2FA, login social — schema já não colide com eles (ver
-`api-migrations.md`). Comportamento esperado extraído do protótipo de
-design: ver [`.claude/rules/api-auth.md`](../.claude/rules/api-auth.md) e
-[`../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md`](../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md).
+Módulo `auth` (cadastro, confirmação de e-mail, login, refresh, logout,
+`GET /me`) documentado por completo em
+[`auth/CLAUDE.md`](src/main/java/com/dot/api/orbita/auth/CLAUDE.md); fora
+desta rodada: esqueci/redefinir senha, histórico de senha, 2FA, login
+social (ver [`api-auth.md`](../.claude/rules/api-auth.md)).
 
 ## Documentação OpenAPI
 
-`springdoc-openapi-starter-webmvc-ui` (3.x, compatível com Boot 4/Jackson 3).
-Só exposta com profile `local` (`springdoc.api-docs.enabled` /
-`springdoc.swagger-ui.enabled=false` na base, `true` em
-`application-local.properties`) — ver
-[ADR 0007](../docs/adr/0007-openapi-via-springdoc.md). Com o profile ativo:
-Swagger UI em `/swagger-ui.html`, spec em `/v3/api-docs`. Endpoint novo
-sempre ganha `@Operation` + `@ApiResponses` (erros de domínio incluídos);
-controller público (sem autenticação) declara `@SecurityRequirements`
-vazio na classe, como `AutenticacaoController`. Bean central em
+`springdoc-openapi-starter-webmvc-ui` (3.x) — só exposta com profile
+`local` (ver [ADR 0007](../docs/adr/0007-openapi-via-springdoc.md)).
+Swagger UI em `/swagger-ui.html`, spec em `/v3/api-docs`. Convenção de
+anotação por endpoint (`@Operation` + `@ApiResponse`, sem wrapper) em
+[`api-codigo.md`](../.claude/rules/api-codigo.md). Bean central em
 `core/config/OpenApiConfig`.
 
 ## Convenções de código
@@ -146,8 +137,10 @@ tocar `api/src/main/java/**`):
   [0004 protótipo auth](../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md),
   [0005 refresh token](../docs/adr/0005-refresh-token-opaco-com-rotacao.md),
   [0006 config](../docs/adr/0006-config-base-mais-application-local.md),
-  [0007 OpenAPI](../docs/adr/0007-openapi-via-springdoc.md)
+  [0007 OpenAPI](../docs/adr/0007-openapi-via-springdoc.md),
+  [0008 erros em pt-BR](../docs/adr/0008-erros-http-em-pt-br-com-lista-de-campos.md)
 - Rules (auto-carregadas por glob): `api-codigo.md`, `api-config.md`,
-  `api-migrations.md`, `api-tests.md`, `api-auth.md` em [`../.claude/rules/`](../.claude/rules/)
+  `api-erros.md`, `api-migrations.md`, `api-tests.md`, `api-auth.md` em
+  [`../.claude/rules/`](../.claude/rules/)
 - Skill `revisar-sonar` — ao receber apontamentos do Sonar
 - [`../front/CLAUDE.md`](../front/CLAUDE.md) — contrato HTTP consumido pelo front

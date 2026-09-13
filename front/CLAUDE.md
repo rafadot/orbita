@@ -69,6 +69,12 @@ Cliente centralizado em `core/api/`, com interceptor que injeta
 encaminha `/api` → `http://localhost:8080` (arquivo a criar na primeira
 feature que consumir a API).
 
+Todo `ProblemDetail` já chega com `title`/`detail` em pt-BR (fonte:
+`GlobalExceptionHandler` na API). Um 400 de validação de corpo traz a
+extensão `erros: [{campo, mensagem}]` — o interceptor/serviço mapeia por
+`campo` pra mostrar a mensagem no input correspondente, em vez de exibir
+só o `detail` genérico.
+
 ## UI — design system
 
 Tokens (cor, tipografia, espaçamento, tema claro/escuro) já chegaram do

@@ -1,10 +1,9 @@
 <!--
-  Este arquivo é carregado em TODA sessão. Mantenha < 80 linhas.
-  Regra de ouro: ponteiro, não cópia — o que é específico de um módulo vive em
-  api/CLAUDE.md ou front/CLAUDE.md; o que é específico de um subtema vive em
-  .claude/rules/*.md; decisões com justificativa longa viram ADR em docs/adr/.
-  Nunca usar `@import` aqui — imports carregam tudo no launch, o que anula o
-  ganho de manter os arquivos filhos pequenos.
+  Este arquivo carrega em TODA sessão — manter < 80 linhas. Regra de ouro:
+  ponteiro, não cópia — específico de módulo vai pra api/CLAUDE.md ou
+  front/CLAUDE.md; subtema vai pra .claude/rules/*.md; decisão com
+  justificativa longa vira ADR em docs/adr/. Nunca `@import` aqui — carrega
+  tudo no launch, anula o ganho de manter os filhos pequenos.
 -->
 
 # Orbita
@@ -37,6 +36,7 @@ filtrar pelo usuário autenticado.
 - [`front/CLAUDE.md`](front/CLAUDE.md) — convenções do front; carrega ao ler algo em `front/`
 - [`.claude/rules/api-codigo.md`](.claude/rules/api-codigo.md) — estilo Java (nomes, comentários, entidade/service); ao tocar `api/src/main/java/**`
 - [`.claude/rules/api-config.md`](.claude/rules/api-config.md) — properties/profile local; ao tocar `application*.properties`, `compose.yaml`, `core/config`
+- [`.claude/rules/api-erros.md`](.claude/rules/api-erros.md) — `GlobalExceptionHandler`/`messages.properties`; ao tocar `core/error/**`
 - [`.claude/rules/api-migrations.md`](.claude/rules/api-migrations.md) — ao tocar `api/src/main/resources/db/**`
 - [`.claude/rules/api-tests.md`](.claude/rules/api-tests.md) — ao tocar `api/src/test/**`
 - [`.claude/rules/api-auth.md`](.claude/rules/api-auth.md) — ao tocar `api/src/main/java/**/auth/**`
@@ -57,8 +57,6 @@ npm test                    # Vitest
 npm run build                # build de produção
 ```
 
-Detalhes de cada comando: ver o CLAUDE.md do módulo correspondente.
-
 ## Regras transversais
 
 - Todo dado de domínio pertence a um usuário autenticado; nunca expor,
@@ -68,7 +66,7 @@ Detalhes de cada comando: ver o CLAUDE.md do módulo correspondente.
 - Integração externa nunca vaza tipo do provedor para o domínio — sempre
   mapeada em `orbita/integration/<provedor>` (API) ou `core/` (front).
 - Contrato HTTP api↔front: JSON camelCase, datas ISO-8601, erros
-  `application/problem+json`.
+  `application/problem+json` em pt-BR (ADR 0008).
 - Nunca alterar path/contrato de um endpoint existente — criar um novo e
   depreciar o antigo.
 - Antes de dar uma tarefa por concluída, compilar/testar o lado tocado.

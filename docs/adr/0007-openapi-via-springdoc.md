@@ -12,8 +12,9 @@ navegável de explorar ou testar os endpoints manualmente, e sem fonte
 `springdoc-openapi-starter-webmvc-ui` versão `3.1.1` — a série `3.x` é a
 compatível com Spring Boot 4/Jakarta EE (`2.x` depende de Jackson 2, que
 colide com o Jackson 3 do Boot 4). Documentação rica: `@Tag`/`@Operation`/
-`@ApiResponses` em cada endpoint (espelhando a tabela do `CLAUDE.md` do
-módulo, erros de domínio incluídos) e `@Schema` nos DTOs. Um
+`@ApiResponse` (repetido por endpoint — `@Repeatable`, sem o wrapper
+`@ApiResponses` que o Sonar aponta como redundante) espelhando a tabela do
+`CLAUDE.md` do módulo, erros de domínio incluídos, e `@Schema` nos DTOs. Um
 `OpenApiCustomizer` central (`core/config/OpenApiConfig`) registra o
 schema de `ProblemDetail` e o aplica automaticamente a toda resposta de
 erro documentada sem `@Content` explícito — evita repetir esse par em
@@ -27,7 +28,7 @@ no filtro.
 
 ## Consequências
 
-- Endpoint novo nasce com `@Operation` + `@ApiResponses`; não é opcional
+- Endpoint novo nasce com `@Operation` + `@ApiResponse`; não é opcional
   (regra em `api-codigo.md`).
 - Handler de erro novo (`GlobalExceptionHandler`) continua sendo a fonte
   de verdade do formato; o customizer só evita repetição de schema, não
