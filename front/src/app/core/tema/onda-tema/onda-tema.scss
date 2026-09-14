@@ -1,0 +1,73 @@
+@use 'tokens' as tokens;
+
+// O disco pinta o tema que `data-fundo`/`data-acento` anunciam — não o de
+// `<html>`, que pode estar no tema oposto durante a transição. Referencia
+// as primitivas de `$theme-light`/`$theme-dark` (`_tokens.scss`) direto, sem
+// passar por `tokens.color()`: essa função vira `var(--dl-*)`, resolvido
+// pelo tema de `<html>`, não pelo tema deste elemento — e recriar o mapa de
+// tema inteiro aqui (pra emitir `--dl-*` local) duplicaria ~1kB em todo
+// componente que usa `tokens` (cada `styleUrl` compila `_tokens.scss` à
+// parte), passando do budget de erro. `--onda-accent` é sobrescrevível por
+// `[style.--onda-accent]` quando `provideTema` configura um acento.
+@keyframes onda-expandir {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes onda-recolher {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0);
+  }
+}
+
+@keyframes onda-sumir {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.onda {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 80;
+  will-change: transform, opacity;
+  box-shadow:
+    0 0 0 1.5px var(--onda-accent),
+    0 0 60px 18px color-mix(in srgb, var(--onda-accent) 33%, transparent);
+
+  &[data-fundo='light'] {
+    background: tokens.$neutral-50;
+  }
+  &[data-fundo='dark'] {
+    background: tokens.$dark-900;
+  }
+  &[data-acento='light'] {
+    --onda-accent: #{tokens.$brand-600};
+  }
+  &[data-acento='dark'] {
+    --onda-accent: #{tokens.$brand-400};
+  }
+}
+
+.onda--expandir {
+  animation:
+    onda-expandir var(--onda-duracao) cubic-bezier(0.22, 0.61, 0.36, 1) forwards,
+    onda-sumir var(--onda-duracao) cubic-bezier(0.6, 0, 0.9, 0.4) forwards;
+}
+
+.onda--recolher {
+  animation:
+    onda-recolher var(--onda-duracao) cubic-bezier(0.22, 0.61, 0.36, 1) forwards,
+    onda-sumir var(--onda-duracao) cubic-bezier(0.6, 0, 0.9, 0.4) forwards;
+}

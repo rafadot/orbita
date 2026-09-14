@@ -8,6 +8,17 @@
   color-scheme: light dark;
 }
 
+// `data-theme` já decide as cores (`_tokens.scss`) — sem isto o navegador
+// continuaria desenhando scrollbar/UI nativa no esquema do sistema mesmo
+// depois de o usuário trocar o tema pelo `AlternadorTema`.
+[data-theme='light'] {
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -17,6 +28,18 @@ body {
   background: tokens.color(surface);
   color: tokens.color(text-primary);
   font-family: tokens.$font-sans;
+}
+
+// Crossfade das cores acompanhando a onda de transição de tema — só ligado
+// enquanto ela está em andamento (`html[data-tema-onda]`, setado por
+// `TemaService`), nunca o tempo todo (senão qualquer troca de estado de UI,
+// tipo foco de campo, herdaria uma transição de 550ms). O próprio botão e o
+// overlay da onda ficam de fora: eles têm a própria animação.
+html[data-tema-onda] *:not(.onda, .alternador-tema, .alternador-tema *) {
+  transition:
+    background-color 0.55s ease,
+    border-color 0.55s ease,
+    color 0.5s ease;
 }
 
 a {

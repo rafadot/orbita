@@ -1,0 +1,111 @@
+@use 'tokens' as tokens;
+
+$spring: cubic-bezier(0.34, 1.4, 0.5, 1);
+
+:host {
+  display: inline-flex;
+}
+
+// Padding positivo + margin negativa iguais: aumenta a área de toque sem
+// mudar o tamanho visual (o SVG, não o botão, define o tamanho do ícone).
+.alternador-tema {
+  appearance: none;
+  border: 0;
+  padding: 6px;
+  margin: -6px;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  line-height: 0;
+  color: tokens.color(accent);
+  transition: color 0.5s ease;
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+}
+
+.alternador-tema__svg {
+  display: block;
+  width: var(--alternador-tamanho, 24px);
+  height: var(--alternador-tamanho, 24px);
+  overflow: visible;
+  transform: scale(1);
+  transition: transform 0.45s $spring;
+}
+
+// Pivô no centro do viewBox (12,12) — sem isto o navegador usa a bounding
+// box de cada forma (fill-box) ou a variam entre navegadores, e girar/
+// escalar em torno do canto em vez do centro faz o ícone "explodir".
+.anel,
+.satelites,
+.nucleo {
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+}
+
+.anel {
+  opacity: 0;
+  transform: rotate(0deg) scale(0.82);
+  transition:
+    opacity 0.4s ease,
+    transform 1.1s $spring;
+}
+
+.nucleo {
+  transform: scale(1);
+  transition:
+    transform 0.5s $spring,
+    fill 0.5s ease;
+}
+
+.satelites {
+  transform: rotate(0deg) scale(1);
+  transition: transform 0.75s $spring;
+}
+
+.alternador-tema:hover {
+  .alternador-tema__svg {
+    transform: scale(1.06);
+    filter: drop-shadow(0 0 10px color-mix(in srgb, currentColor 40%, transparent));
+  }
+  .anel {
+    opacity: 0.55;
+    transform: rotate(120deg) scale(1);
+  }
+  .satelites {
+    transform: rotate(45deg) scale(1.08);
+  }
+  .nucleo {
+    transform: scale(0.82);
+  }
+}
+
+// Especificidade igual à de `:hover` (3 seletores de classe/pseudo-classe)
+// pra vencer no clique com o mouse ainda sobre o botão — resolvido por
+// ordem no arquivo (este bloco vem depois do `:hover`).
+.alternador-tema.alternador-tema--pulso {
+  .alternador-tema__svg {
+    transform: scale(0.9);
+  }
+  .anel {
+    opacity: 0.9;
+    transform: rotate(120deg) scale(1.25);
+  }
+  .satelites {
+    transform: rotate(180deg) scale(0.55);
+    transition: transform 0.6s $spring;
+  }
+  .nucleo {
+    transform: scale(1.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alternador-tema,
+  .alternador-tema * {
+    transition: none !important;
+    transform: none !important;
+  }
+}

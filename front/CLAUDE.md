@@ -24,8 +24,9 @@ npx prettier --write .       # formatação
 src/app/
 ├── core/
 │   ├── api/         # ErroApi, erroApiInterceptor, tokenInterceptor, renovarSessaoInterceptor
-│   └── auth/        # SessaoService, armazenamento-sessao, Usuario/TokensResponse, autenticadoGuard/anonimoGuard
-├── shared/ui/       # Logo, Alerta, CampoSenha, Checkbox — sem estado, reutilizáveis
+│   ├── auth/        # SessaoService, armazenamento-sessao, Usuario/TokensResponse, autenticadoGuard/anonimoGuard
+│   └── tema/        # TemaService (tema + onda de transição), armazenamento-tema, OndaTema (overlay, 1x em App)
+├── shared/ui/       # Logo, AlternadorTema, Alerta, CampoSenha, Checkbox — sem estado, reutilizáveis
 └── features/
     ├── auth/        # login, cadastro, confirmar-email — ver auth/CLAUDE.md da api
     │   ├── auth.routes.ts
@@ -90,9 +91,15 @@ convenção de uso e
 [`../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md`](../docs/adr/0004-prototipo-autenticacao-fonte-de-verdade.md)
 para a origem.
 
+O ícone da Órbita é o botão de troca de tema (`shared/ui/alternador-tema`,
+embutido no `Logo`) — hover/pulso de clique animam em CSS, a onda circular
+(escuro→claro expande do ícone, claro→escuro encolhe até ele) é decidida e
+temporizada por `core/tema/tema.service.ts` e renderizada uma única vez
+(`OndaTema`) em `App`. Tema persiste em `localStorage` (`orbita-theme`).
+
 Ainda **não** há biblioteca de componentes Angular escolhida (Material,
 PrimeNG...). O que existe: componentes genéricos em `shared/ui/` (`Logo`,
-`Alerta`, `CampoSenha`, `Checkbox` — os dois últimos são
+`AlternadorTema`, `Alerta`, `CampoSenha`, `Checkbox` — os dois últimos são
 `ControlValueAccessor`, usam com `formControlName` normalmente) e botão via
 classes globais em `styles.scss` (`.botao.botao--primario/--secundario/--fantasma`,
 `[aria-busy]` mostra `.botao__spinner`) — evita duplicar

@@ -12,6 +12,27 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+    <script>
+      // Aplica o tema salvo antes do CSS/Angular subirem — sem isto a tela
+      // pisca no tema padrão (claro) por um frame antes do TemaService
+      // corrigir. Mesma chave e mesma regra de fallback de
+      // `core/tema/tema.service.ts` (duplicado de propósito: script deve
+      // rodar sozinho, sem esperar bundle nenhum).
+      (function () {
+        try {
+          var salvo = localStorage.getItem('orbita-theme');
+          var tema =
+            salvo === 'light' || salvo === 'dark'
+              ? salvo
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', tema);
+        } catch (e) {
+          /* localStorage/matchMedia indisponível — fica no tema padrão (claro) */
+        }
+      })();
+    </script>
   </head>
   <body>
     <app-root></app-root>

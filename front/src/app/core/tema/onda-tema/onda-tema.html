@@ -1,0 +1,16 @@
+@if (onda(); as onda) {
+  <div
+    class="onda"
+    aria-hidden="true"
+    [class.onda--expandir]="onda.direcao === 'expandir'"
+    [class.onda--recolher]="onda.direcao === 'recolher'"
+    [attr.data-fundo]="onda.temaDisco"
+    [attr.data-acento]="onda.temaDestino"
+    [style.left.px]="onda.x - onda.raio"
+    [style.top.px]="onda.y - onda.raio"
+    [style.width.px]="onda.raio * 2"
+    [style.height.px]="onda.raio * 2"
+    [style.--onda-duracao]="duracaoOndaMs + 'ms'"
+    [style.--onda-accent]="acentoPara(onda.temaDestino)"
+  ></div>
+}

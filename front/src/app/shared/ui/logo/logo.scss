@@ -10,11 +10,8 @@
   gap: 10px;
 }
 
-.logo__icone {
-  width: 22px;
-  height: 22px;
-  color: tokens.color(accent);
-  flex: none;
+.logo app-alternador-tema {
+  --alternador-tamanho: 22px;
 }
 
 .logo__texto {
@@ -26,9 +23,8 @@
 }
 
 @media (max-width: tokens.$bp-tablet) {
-  .logo__icone {
-    width: 20px;
-    height: 20px;
+  .logo app-alternador-tema {
+    --alternador-tamanho: 20px;
   }
 
   .logo__texto {
