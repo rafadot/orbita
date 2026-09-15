@@ -1,0 +1,14 @@
+@if (resumo.isLoading()) {
+  <app-home-carregando />
+} @else if (resumo.error()) {
+  <div class="inicio__erro">
+    <app-alerta tom="danger" titulo="Não deu pra carregar sua órbita">
+      Tente de novo em instantes.
+    </app-alerta>
+    <button type="button" class="botao botao--secundario" (click)="resumo.reload()">
+      Tentar de novo
+    </button>
+  </div>
+} @else if (resumo.value()?.primeiroAcesso) {
+  <app-primeiro-acesso />
+}

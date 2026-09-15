@@ -116,7 +116,7 @@ export class Login {
   }
 
   private irParaDestinoAposSucesso(): void {
-    const destino = this.route.snapshot.queryParamMap.get('retorno') ?? '/painel';
+    const destino = this.route.snapshot.queryParamMap.get('retorno') ?? '/home';
     setTimeout(() => this.router.navigateByUrl(destino), 400);
   }
 }

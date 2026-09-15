@@ -1,0 +1,136 @@
+<div class="shell">
+  <aside class="shell__sidebar">
+    <app-alternador-tema class="shell__marca" />
+
+    <nav class="shell__nav" aria-label="Áreas do Órbita">
+      <a
+        routerLink="/home"
+        routerLinkActive="shell__nav-item--ativo"
+        class="shell__nav-item"
+        title="Início"
+      >
+        In
+      </a>
+      @for (area of areas; track area.sigla) {
+        <button
+          type="button"
+          class="shell__nav-item"
+          [title]="area.rotulo + ' · em breve'"
+          disabled
+        >
+          {{ area.sigla }}
+        </button>
+      }
+    </nav>
+
+    <div class="shell__sidebar-rodape">
+      <span class="shell__separador" aria-hidden="true"></span>
+      <button
+        type="button"
+        class="shell__icone-ajustes"
+        title="Ajustes · em breve"
+        aria-label="Ajustes"
+        disabled
+      >
+        ⚙
+      </button>
+      <button
+        type="button"
+        class="shell__avatar shell__avatar--sidebar"
+        aria-haspopup="true"
+        [attr.aria-expanded]="menuAberto()"
+        aria-label="Menu do usuário"
+        (click)="alternarMenu()"
+      >
+        {{ inicialAvatar() }}
+      </button>
+    </div>
+  </aside>
+
+  <div class="shell__conteudo">
+    <header class="shell__topbar">
+      <div class="shell__saudacao-bloco">
+        <span class="shell__saudacao">{{ saudacao() }}, {{ primeiroNome() }}</span>
+        <span class="shell__data shell__data--longa">{{ dataLonga() }}</span>
+        <span class="shell__data shell__data--curta">{{ dataCurta() }}</span>
+      </div>
+      <div class="shell__acoes">
+        <input
+          type="text"
+          class="shell__busca"
+          placeholder="Buscar em todas as áreas"
+          title="Em breve"
+          disabled
+        />
+        <button
+          type="button"
+          class="botao botao--primario botao--compacto shell__registrar"
+          title="Em breve"
+          disabled
+        >
+          Registrar
+        </button>
+        <button
+          type="button"
+          class="shell__avatar shell__avatar--topbar"
+          aria-haspopup="true"
+          [attr.aria-expanded]="menuAberto()"
+          aria-label="Menu do usuário"
+          (click)="alternarMenu()"
+        >
+          {{ inicialAvatar() }}
+        </button>
+      </div>
+    </header>
+
+    <main class="shell__main">
+      <router-outlet />
+    </main>
+
+    <nav class="shell__bottom-nav" aria-label="Áreas do Órbita">
+      <a routerLink="/home" routerLinkActive="shell__bottom-item--ativo" class="shell__bottom-item">
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+          class="shell__bottom-icone"
+        >
+          <circle cx="12" cy="12" r="4.6" fill="currentColor" />
+          <circle cx="12" cy="3" r="2.2" fill="currentColor" />
+          <circle cx="21" cy="12" r="1.5" fill="currentColor" />
+          <circle cx="12" cy="21" r="2.1" fill="currentColor" />
+          <circle cx="3" cy="12" r="1.85" fill="currentColor" />
+        </svg>
+        <span>Início</span>
+      </a>
+      <button type="button" class="shell__bottom-item" title="Em breve" disabled>
+        <span class="shell__bottom-sigla">Fi</span>
+        <span>Finanças</span>
+      </button>
+      <button type="button" class="shell__bottom-mais" title="Em breve" aria-label="Registrar" disabled>
+        +
+      </button>
+      <button type="button" class="shell__bottom-item" title="Em breve" disabled>
+        <span class="shell__bottom-sigla">Ag</span>
+        <span>Agenda</span>
+      </button>
+      <button type="button" class="shell__bottom-item" title="Em breve" disabled>
+        <span class="shell__bottom-sigla">Me</span>
+        <span>Metas</span>
+      </button>
+    </nav>
+  </div>
+
+  @if (menuAberto()) {
+    <button type="button" class="shell__backdrop" aria-label="Fechar menu" (click)="fecharMenu()"></button>
+    <div class="shell__menu" role="menu">
+      <p class="shell__menu-nome">{{ usuario()?.nome }}</p>
+      <p class="shell__menu-email">{{ usuario()?.email }}</p>
+      <button type="button" class="botao botao--secundario shell__menu-sair" role="menuitem" (click)="sair()">
+        Sair
+      </button>
+    </div>
+  }
+</div>

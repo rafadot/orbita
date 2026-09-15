@@ -15,9 +15,9 @@ Spring Mail, Argon2 (`bcprov-jdk18on`), JaCoCo. Módulo Maven único
 
 Dois arquivos: `application.properties` (base, prod-ready, só `${VAR}` sem
 default) + `application-local.properties` (gitignored, valores reais +
-Mailpit/docker-compose). Roda com profile `local`. Modelo completo e
-checklist em [`api-config.md`](../.claude/rules/api-config.md) / ADR 0006.
-Mailpit: `http://localhost:8025` (exige Docker).
+Mailpit/docker-compose). Roda com profile `local`. Modelo completo e checklist
+em [`api-config.md`](../.claude/rules/api-config.md) / ADR 0006. Mailpit:
+`http://localhost:8025` (exige Docker).
 
 ## Comandos
 
@@ -41,7 +41,7 @@ com.dot.api.orbita/
 │   └── mail/          # EnviadorEmail (concreta), MensagemEmail
 ├── integration/
 │   └── <provedor>/    # cliente externo isolado, nunca vaza tipo pro domínio
-└── <modulo>/           # ex.: financas, saude...
+└── <modulo>/           # ex.: home, financas, saude...
     ├── api/            # Controller + DTOs (records)
     ├── service/
     ├── domain/         # entidades JPA
@@ -99,7 +99,8 @@ Módulo `auth` (cadastro, confirmação de e-mail, login, refresh, logout,
 `GET /me`) documentado por completo em
 [`auth/CLAUDE.md`](src/main/java/com/dot/api/orbita/auth/CLAUDE.md); fora
 desta rodada: esqueci/redefinir senha, histórico de senha, 2FA, login
-social (ver [`api-auth.md`](../.claude/rules/api-auth.md)).
+social (ver [`api-auth.md`](../.claude/rules/api-auth.md)). `GET /home`
+(módulo `home`, resumo da tela inicial) ainda não tem `CLAUDE.md` próprio.
 
 ## Documentação OpenAPI
 

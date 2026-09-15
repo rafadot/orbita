@@ -1,0 +1,14 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: block;
+}
+
+.inicio__erro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: tokens.space(4);
+  padding: 28px 32px;
+  max-width: 480px;
+}

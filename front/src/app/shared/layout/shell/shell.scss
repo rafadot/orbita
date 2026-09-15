@@ -1,0 +1,348 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: tokens.color(surface-sunken);
+}
+
+// Reset comum aos botões-ícone (nav da sidebar, ajustes, itens da barra
+// inferior) — um placeholder evita repetir o mesmo bloco de declarações em
+// cada seletor no CSS compilado (orçamento de 8kB por componente). Fica
+// fora de qualquer `@media`: Sass não permite `@extend` através de uma
+// media query, então os seletores mobile abaixo só têm a visibilidade
+// alternada em `@media`, não o estilo base.
+%shell-botao-icone {
+  appearance: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+%shell-icone-centralizado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// --- Sidebar (desktop) ------------------------------------------------
+
+.shell__sidebar {
+  width: 72px;
+  flex: none;
+  background: tokens.color(surface);
+  border-right: 1px solid tokens.color(border-subtle);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 0;
+  gap: 22px;
+}
+
+.shell__marca {
+  --alternador-tamanho: 26px;
+}
+
+.shell__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: tokens.space(2);
+}
+
+.shell__nav-item {
+  @extend %shell-botao-icone;
+  @extend %shell-icone-centralizado;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--dl-radius-md);
+  color: tokens.color(text-secondary);
+  font-family: tokens.$font-mono;
+  font-size: 12px;
+}
+
+.shell__nav-item--ativo {
+  background: tokens.color(accent-soft);
+  color: tokens.color(accent-active);
+}
+
+.shell__sidebar-rodape {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: tokens.space(3);
+}
+
+.shell__separador {
+  width: 40px;
+  height: 1px;
+  background: tokens.color(border-subtle);
+}
+
+.shell__icone-ajustes {
+  @extend %shell-botao-icone;
+  @extend %shell-icone-centralizado;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--dl-radius-md);
+  background: tokens.color(surface-sunken);
+  border: 1px solid tokens.color(border);
+  font-size: 22px;
+  color: tokens.color(text-primary);
+
+  &:hover:not(:disabled) {
+    background: tokens.color(accent-soft);
+    border-color: tokens.color(accent);
+    color: tokens.color(accent-active);
+  }
+}
+
+.shell__avatar {
+  @extend %shell-icone-centralizado;
+  appearance: none;
+  border: none;
+  border-radius: tokens.$radius-pill;
+  background: tokens.color(text-primary);
+  color: tokens.color(surface);
+  font-family: tokens.$font-sans;
+  font-weight: tokens.$fw-semibold;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:focus-visible {
+    @include tokens.focus-ring();
+  }
+}
+
+.shell__avatar--sidebar,
+.shell__avatar--topbar {
+  width: 36px;
+  height: 36px;
+}
+
+.shell__avatar--topbar {
+  display: none;
+}
+
+// --- Conteúdo -----------------------------------------------------------
+
+.shell__conteudo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.shell__topbar {
+  height: 72px;
+  flex: none;
+  background: tokens.color(surface);
+  border-bottom: 1px solid tokens.color(border-subtle);
+  padding: 0 tokens.space(8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: tokens.space(6);
+}
+
+.shell__saudacao-bloco {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  min-width: 0;
+}
+
+.shell__saudacao {
+  font-size: 20px;
+  font-weight: tokens.$fw-semibold;
+  letter-spacing: -0.01em;
+  color: tokens.color(text-primary);
+  white-space: nowrap;
+}
+
+.shell__data {
+  font-family: tokens.$font-mono;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: tokens.color(text-muted);
+  white-space: nowrap;
+}
+
+.shell__data--curta {
+  display: none;
+}
+
+.shell__acoes {
+  display: flex;
+  align-items: center;
+  gap: tokens.space(3);
+}
+
+// Decorativo — sempre `disabled` até existir busca de verdade, por isso não
+// puxa o mixin `input-base` inteiro (hover/foco/erro não se aplicam aqui).
+.shell__busca {
+  width: 320px;
+  box-sizing: border-box;
+  padding: 11px 14px;
+  font-family: tokens.$font-sans;
+  font-size: 14px;
+  color: tokens.color(text-primary);
+  background: tokens.color(surface-raised);
+  border: 1px solid tokens.color(border-strong);
+  border-radius: var(--dl-radius-md);
+
+  &::placeholder {
+    color: tokens.color(text-disabled);
+  }
+}
+
+.shell__main {
+  flex: 1;
+  min-height: 0;
+}
+
+// --- Barra inferior (mobile) — estilo base aqui (fora de `@media`) pra
+// poder usar o placeholder; visibilidade alternada lá embaixo.
+
+.shell__bottom-nav {
+  display: none;
+  align-items: center;
+  justify-content: space-around;
+  height: 76px;
+  padding-bottom: 10px;
+  background: tokens.color(surface);
+  border-top: 1px solid tokens.color(border-subtle);
+}
+
+.shell__bottom-item {
+  @extend %shell-botao-icone;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 56px;
+  padding: tokens.space(2) 0;
+  color: tokens.color(text-secondary);
+  font-size: 11px;
+}
+
+.shell__bottom-icone {
+  display: block;
+}
+
+.shell__bottom-sigla {
+  font-family: tokens.$font-mono;
+  font-size: 13px;
+}
+
+.shell__bottom-item--ativo {
+  color: tokens.color(accent);
+}
+
+.shell__bottom-mais {
+  @extend %shell-botao-icone;
+  width: 52px;
+  height: 52px;
+  margin-top: -18px;
+  border-radius: tokens.$radius-pill;
+  background: tokens.color(accent);
+  color: tokens.color(text-on-accent);
+  font-size: 24px;
+  font-weight: tokens.$fw-medium;
+}
+
+// --- Menu do avatar --------------------------------------------------
+
+.shell__backdrop {
+  position: fixed;
+  inset: 0;
+  border: none;
+  background: transparent;
+  z-index: 30;
+}
+
+.shell__menu {
+  position: fixed;
+  z-index: 31;
+  left: 84px;
+  bottom: tokens.space(4);
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(2);
+  padding: tokens.space(4);
+  background: tokens.color(surface-raised);
+  border: 1px solid tokens.color(border);
+  border-radius: var(--dl-radius-md);
+}
+
+.shell__menu-nome {
+  font-size: 14px;
+  font-weight: tokens.$fw-semibold;
+  color: tokens.color(text-primary);
+  margin: 0;
+}
+
+.shell__menu-email {
+  font-size: 13px;
+  color: tokens.color(text-secondary);
+  margin: 0 0 tokens.space(2);
+}
+
+// --- Responsivo (só visibilidade/posição, sem estilo novo) -----------
+
+@media (max-width: tokens.$bp-desktop) {
+  .shell__sidebar {
+    display: none;
+  }
+
+  .shell__topbar {
+    padding: 36px 20px 14px;
+    height: auto;
+  }
+
+  .shell__saudacao {
+    font-size: 19px;
+  }
+
+  .shell__data--longa {
+    display: none;
+  }
+
+  .shell__data--curta {
+    display: inline;
+    font-size: 10px;
+  }
+
+  .shell__busca,
+  .shell__registrar {
+    display: none;
+  }
+
+  .shell__avatar--topbar {
+    display: flex;
+  }
+
+  .shell__bottom-nav {
+    display: flex;
+    flex: none;
+  }
+
+  .shell__menu {
+    left: auto;
+    right: tokens.space(4);
+    bottom: auto;
+    top: 64px;
+  }
+}

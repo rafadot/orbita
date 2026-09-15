@@ -26,7 +26,9 @@ src/app/
 │   ├── api/         # ErroApi, erroApiInterceptor, tokenInterceptor, renovarSessaoInterceptor
 │   ├── auth/        # SessaoService, armazenamento-sessao, Usuario/TokensResponse, autenticadoGuard/anonimoGuard
 │   └── tema/        # TemaService (tema + onda de transição), armazenamento-tema, OndaTema (overlay, 1x em App)
-├── shared/ui/       # Logo, AlternadorTema, Alerta, CampoSenha, Checkbox — sem estado, reutilizáveis
+├── shared/
+│   ├── ui/          # Logo, AlternadorTema, Alerta, CampoSenha, Checkbox — sem estado, reutilizáveis
+│   └── layout/      # Shell (sidebar/topbar/barra inferior das telas logadas), areas.ts, cabecalho.ts
 └── features/
     ├── auth/        # login, cadastro, confirmar-email — ver auth/CLAUDE.md da api
     │   ├── auth.routes.ts
@@ -37,7 +39,12 @@ src/app/
     │   ├── auth.model.ts
     │   ├── email-pendente.ts   # sessionStorage do e-mail aguardando confirmação
     │   └── erros-formulario.ts # aplicarErrosDeCampo, formatarHorario
-    └── painel/      # placeholder pós-login (GET /me + sair) até existir 1º módulo real
+    └── home/        # tela inicial pós-login — GET /home, ver home/CLAUDE.md da api
+        ├── home.routes.ts
+        ├── pages/inicio/    # decide a variante (carregando/erro/primeiro acesso/completa)
+        ├── components/      # home-carregando (skeleton), primeiro-acesso
+        ├── home.service.ts  # httpResource GET /home
+        └── home.model.ts
 ```
 
 Regra de dependência: `features → shared → core`. Uma feature nunca importa
@@ -46,7 +53,10 @@ outra feature diretamente.
 ## Roteamento
 
 Lazy loading por feature via `loadChildren` nas rotas de `<modulo>.routes.ts`.
-`app.routes.ts` só registra as features, sem lógica. Guards de autenticação
+`app.routes.ts` só registra as features, sem lógica — a rota de toda tela
+logada é filha de uma rota-layout sem path que renderiza `Shell`
+(`shared/layout/shell`) atrás de `autenticadoGuard`; um módulo de vida novo
+vira mais um filho dessa rota, não um shell próprio. Guards de autenticação
 (`autenticadoGuard`, `anonimoGuard`) moram em `core/auth/`.
 `provideRouter(routes, withComponentInputBinding())` — rotas podem receber
 query params direto como `input()` (ver `ConfirmarEmail.token`).
@@ -102,18 +112,31 @@ PrimeNG...). O que existe: componentes genéricos em `shared/ui/` (`Logo`,
 `AlternadorTema`, `Alerta`, `CampoSenha`, `Checkbox` — os dois últimos são
 `ControlValueAccessor`, usam com `formControlName` normalmente) e botão via
 classes globais em `styles.scss` (`.botao.botao--primario/--secundario/--fantasma`,
-`[aria-busy]` mostra `.botao__spinner`) — evita duplicar
-`@include tokens.button-*` em cada componente. `AuthShell`
-(`features/auth/components/`) é o layout comum das 3 telas de auth
-(`@include tokens.auth-shell`). Vários estilos de componente passam do
-budget de 4kB *warning* (nunca do *error* de 8kB) só por expandirem mixins
-grandes do design system (`input-base`, `alert-base`) — aceito, é o preço
-de reusar o mixin em vez de reinventar.
+`[aria-busy]` mostra `.botao__spinner`, `.cartao` é o fundo/borda/raio de
+superfície repetido em todo cartão de tela logada, `.spinner` é o mesmo giro
+solto fora de botão) — evita duplicar `@include tokens.button-*`/cor/borda em
+cada componente. `AuthShell` (`features/auth/components/`) é o layout comum
+das 3 telas de auth (`@include tokens.auth-shell`); `Shell`
+(`shared/layout/`) é o equivalente pras telas logadas (sidebar de ícones no
+desktop, barra inferior no mobile, topbar, menu do avatar — único lugar de
+"Sair"). Vários estilos de componente passam do budget de 4kB *warning*
+(nunca do *error* de 8kB) só por expandirem mixins grandes do design system
+(`input-base`, `alert-base`) — aceito, é o preço de reusar o mixin em vez de
+reinventar; quando o componente é grande o bastante pra chegar perto do
+*error* de 8kB (`Shell`), prefira estilo manual enxuto a `@include` de um
+mixin caro num elemento sempre `disabled`/decorativo (ver `.shell__busca`) e
+um `%placeholder` + `@extend` pros resets repetidos — nunca através de uma
+`@media`, Sass não permite.
 
 ## Testes
 
 Vitest, `*.spec.ts` ao lado do arquivo testado. Priorizar testar
-services/signals (lógica) sobre templates triviais.
+services/signals (lógica) sobre templates triviais. `httpResource` (de
+`@angular/common/http`, não `@angular/core`) só roda em contexto de
+injeção — criar com `TestBed.runInInjectionContext(() =>
+servico.metodo())` e aguardar a requisição com `await vi.waitFor(() =>
+httpTesting.expectOne(...))`, nunca `expectOne` direto (ela dispara num
+microtask, não no mesmo tick) — ver `features/home/home.service.spec.ts`.
 
 ## Ponteiros
 

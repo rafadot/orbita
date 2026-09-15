@@ -1,0 +1,273 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: block;
+}
+
+// Três tons do design: linha de texto (padrão), bloco médio, bloco claro.
+.carregando__bloco {
+  display: block;
+  border-radius: var(--dl-radius-sm);
+  background: tokens.color(border-subtle);
+  animation: pulsar 1.4s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.carregando__bloco--tom-medio {
+  background: tokens.color(surface-disabled);
+}
+
+.carregando__bloco--tom-claro {
+  background: tokens.color(surface-sunken);
+}
+
+@keyframes pulsar {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+// --- Coluna da órbita (desktop) --------------------------------------
+
+.carregando__bloco--eyebrow-orbita {
+  width: 180px;
+  height: 12px;
+}
+
+.carregando__bloco--titulo-orbita {
+  width: 260px;
+  height: 20px;
+}
+
+.carregando__bloco--painel {
+  width: 100%;
+  height: 96px;
+  border-radius: var(--dl-radius-md);
+}
+
+// --- Cartão 1 (dinheiro) -----------------------------------------------
+
+.carregando__bloco--eyebrow-card {
+  width: 200px;
+  height: 12px;
+}
+
+.carregando__bloco--valor {
+  width: 320px;
+  height: 40px;
+  border-radius: 6px;
+}
+
+.carregando__bloco--barra {
+  width: 100%;
+  height: 8px;
+}
+
+.carregando__bloco--celula {
+  flex: 1;
+  height: 32px;
+  border-radius: 6px;
+}
+
+// --- Cartão 2 (hoje) -----------------------------------------------
+
+.carregando__bloco--titulo-card2 {
+  width: 120px;
+  height: 16px;
+}
+
+.carregando__bloco--linha {
+  width: 100%;
+  height: 44px;
+  border-radius: 6px;
+}
+
+// --- Cartão 3 (metas, duas colunas) -----------------------------------
+
+.carregando__bloco--titulo-col {
+  width: 70%;
+  height: 14px;
+}
+
+.carregando__bloco--barra-col {
+  width: 100%;
+  height: 8px;
+}
+
+// --- Mobile -------------------------------------------------------
+
+.carregando__bloco--hero {
+  width: 100%;
+  height: 150px;
+  border-radius: var(--dl-radius-md);
+}
+
+.carregando__bloco--titulo-sm {
+  width: 140px;
+  height: 10px;
+}
+
+.carregando__bloco--icone {
+  height: 54px;
+  border-radius: var(--dl-radius-md);
+}
+
+.carregando__bloco--titulo-card2b {
+  width: 90px;
+  height: 14px;
+}
+
+.carregando__bloco--linha-mobile {
+  height: 38px;
+  border-radius: 6px;
+}
+
+// --- Layout comum -----------------------------------------------------
+
+.carregando__linhas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.carregando__grade {
+  display: grid;
+  gap: tokens.space(2);
+}
+
+.carregando__grade--3 {
+  display: flex;
+  gap: 20px;
+}
+
+.carregando__grade--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.carregando__cartao {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.carregando__cartao--gap-16 {
+  gap: 16px;
+}
+
+.carregando__cartao--duas-colunas {
+  flex-direction: row;
+  gap: tokens.space(5);
+}
+
+.carregando__coluna-metade {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.carregando__spinner-linha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 4px;
+}
+
+.carregando__texto {
+  font-size: 14px;
+  color: tokens.color(text-secondary);
+}
+
+.carregando__texto--mobile {
+  font-size: 13px;
+}
+
+// --- Desktop / mobile: visibilidade -----------------------------------
+
+.carregando__mobile {
+  display: none;
+}
+
+.carregando__desktop {
+  display: flex;
+  gap: tokens.space(6);
+  padding: 28px 32px;
+}
+
+.carregando__coluna-orbita {
+  width: 600px;
+  flex: none;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: tokens.space(6);
+}
+
+.carregando__anel {
+  width: 336px;
+  height: 336px;
+  border-radius: 50%;
+  border: 1px dashed tokens.color(border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carregando__nucleo {
+  width: 148px;
+  height: 148px;
+  border-radius: 50%;
+  background: tokens.color(surface-disabled);
+  animation: pulsar 1.4s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.carregando__coluna-lista {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: tokens.space(5);
+}
+
+@media (max-width: tokens.$bp-desktop) {
+  .carregando__desktop {
+    display: none;
+  }
+
+  .carregando__mobile {
+    display: flex;
+    flex-direction: column;
+    gap: tokens.space(4);
+    padding: tokens.space(4) tokens.space(5);
+  }
+
+  .carregando__cartao--mobile {
+    padding: 18px;
+  }
+
+  .carregando__cartao--mobile-gap-10 {
+    gap: 10px;
+  }
+
+  .carregando__cartao--mobile-gap-12 {
+    gap: 12px;
+  }
+
+  .carregando__spinner-linha--mobile {
+    padding-left: 0;
+  }
+}

@@ -1,0 +1,95 @@
+<div class="primeiro-acesso">
+  <!-- desktop -->
+  <div class="primeiro-acesso__desktop">
+    <div class="cartao primeiro-acesso__painel">
+      <div class="primeiro-acesso__intro">
+        <span class="primeiro-acesso__eyebrow">Primeiro acesso</span>
+        <h1 class="primeiro-acesso__titulo">
+          Sua órbita começa vazia. Conecte um banco e ela se preenche sozinha.
+        </h1>
+        <p class="primeiro-acesso__apoio">
+          Leva dois minutos e a autorização é feita no ambiente do seu banco, em modo somente
+          leitura.
+        </p>
+      </div>
+
+      <div class="primeiro-acesso__acoes">
+        <button type="button" class="botao botao--primario" title="Em breve" disabled>
+          Conectar meu banco
+        </button>
+        <button type="button" class="botao botao--secundario" title="Em breve" disabled>
+          Lançar manualmente
+        </button>
+      </div>
+
+      <ol class="primeiro-acesso__etapas">
+        <li class="primeiro-acesso__etapa" [class.primeiro-acesso__etapa--feita]="emailConfirmado()">
+          @if (emailConfirmado()) {
+            <span class="primeiro-acesso__etapa-marca primeiro-acesso__etapa-marca--feita">✓</span>
+          } @else {
+            <span class="primeiro-acesso__etapa-marca">1</span>
+          }
+          <span class="primeiro-acesso__etapa-texto">Conta criada e e-mail confirmado</span>
+        </li>
+        <li class="primeiro-acesso__etapa primeiro-acesso__etapa--atual">
+          <span class="primeiro-acesso__etapa-marca primeiro-acesso__etapa-marca--atual">2</span>
+          <span class="primeiro-acesso__etapa-texto">Conectar a primeira instituição</span>
+          <span class="primeiro-acesso__etapa-tempo">2 min</span>
+        </li>
+        <li class="primeiro-acesso__etapa">
+          <span class="primeiro-acesso__etapa-marca">3</span>
+          <span class="primeiro-acesso__etapa-texto">Escolher quais áreas da vida ativar</span>
+        </li>
+      </ol>
+    </div>
+
+    <div class="primeiro-acesso__coluna-lateral">
+      <div class="cartao primeiro-acesso__areas">
+        <h2 class="primeiro-acesso__areas-titulo">As oito áreas do Órbita</h2>
+        <div class="primeiro-acesso__grade">
+          @for (area of areas; track area.rotulo) {
+            <div class="primeiro-acesso__area" [class.primeiro-acesso__area--inativa]="!area.ativa">
+              <span class="primeiro-acesso__area-rotulo">{{ area.rotulo }}</span>
+              <span class="primeiro-acesso__area-descricao">{{ area.descricao }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="primeiro-acesso__aviso">
+        <p class="primeiro-acesso__aviso-titulo">Nada é publicado, nada é vendido</p>
+        <p class="primeiro-acesso__aviso-texto">
+          O acesso é somente leitura, regulado pelo Banco Central, e você revoga em dois toques.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- mobile -->
+  <div class="primeiro-acesso__mobile">
+    <div class="cartao primeiro-acesso__painel">
+      <span class="primeiro-acesso__eyebrow">Primeiro acesso</span>
+      <h1 class="primeiro-acesso__titulo primeiro-acesso__titulo--curto">
+        Conecte um banco e sua órbita se preenche.
+      </h1>
+      <p class="primeiro-acesso__apoio">
+        Somente leitura, autorizado no app do seu banco. Dois minutos.
+      </p>
+      <button type="button" class="botao botao--primario" title="Em breve" disabled>
+        Conectar meu banco
+      </button>
+      <button type="button" class="botao botao--secundario" title="Em breve" disabled>
+        Lançar manualmente
+      </button>
+    </div>
+
+    <div class="cartao primeiro-acesso__depois">
+      <p class="primeiro-acesso__areas-titulo">Depois você ativa</p>
+      <div class="primeiro-acesso__grade primeiro-acesso__grade--depois">
+        @for (area of areasInativas(); track area.rotulo) {
+          <div class="primeiro-acesso__area-simples">{{ area.rotulo }}</div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

@@ -67,16 +67,36 @@ a {
   @include tokens.button-ghost;
 }
 
+// Variante mais baixa do botão — topbars/toolbars onde os 48px do padrão
+// (`button-base`) não cabem (ex.: "Registrar" no `Shell`, ao lado da busca).
+.botao--compacto {
+  height: 40px;
+  font-size: 14px;
+  padding: 0 18px;
+}
+
+// Cartão de superfície — o bloco mais repetido nas telas logadas (Home e o
+// que vier depois). Evita `background/border/border-radius` duplicado em
+// cada `.scss` de componente.
+.cartao {
+  background: tokens.color(surface);
+  border: 1px solid tokens.color(border);
+  border-radius: var(--dl-radius-md);
+}
+
+// Spinner solto (fora de botão) — mesmo giro do `.botao__spinner`, exposto
+// como classe própria pra telas de carregamento fora de um botão.
+.spinner,
 .botao .botao__spinner {
   width: 14px;
   height: 14px;
   border-radius: 50%;
   border: 2px solid currentColor;
   border-right-color: transparent;
-  animation: botao-girar 700ms linear infinite;
+  animation: girar 700ms linear infinite;
 }
 
-@keyframes botao-girar {
+@keyframes girar {
   to {
     transform: rotate(360deg);
   }

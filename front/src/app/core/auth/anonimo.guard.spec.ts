@@ -33,12 +33,12 @@ describe('anonimoGuard', () => {
     await expect(executar()).resolves.toBe(true);
   });
 
-  it('deve redirecionar para o painel quando ja autenticado', async () => {
+  it('deve redirecionar para a home quando ja autenticado', async () => {
     sessaoService.estado.set('autenticado');
 
     const resultado = await executar();
 
     expect(resultado).toBeInstanceOf(UrlTree);
-    expect((resultado as UrlTree).toString()).toContain('/painel');
+    expect((resultado as UrlTree).toString()).toContain('/home');
   });
 });

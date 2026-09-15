@@ -31,13 +31,13 @@ describe('autenticadoGuard', () => {
   it('deve permitir quando autenticado', async () => {
     sessaoService.estado.set('autenticado');
 
-    await expect(executar('/painel')).resolves.toBe(true);
+    await expect(executar('/home')).resolves.toBe(true);
   });
 
   it('deve redirecionar para login com retorno quando anonimo', async () => {
     sessaoService.estado.set('anonimo');
 
-    const resultado = await executar('/painel');
+    const resultado = await executar('/home');
 
     expect(resultado).toBeInstanceOf(UrlTree);
     expect((resultado as UrlTree).toString()).toContain('/login');

@@ -1,8 +1,0 @@
-<div class="inicio">
-  <app-logo />
-  @if (usuario(); as usuarioAtual) {
-    <p class="inicio__saudacao">Olá, {{ usuarioAtual.nome }}</p>
-    <p class="inicio__email">{{ usuarioAtual.email }}</p>
-  }
-  <button type="button" class="botao botao--secundario" (click)="sair()">Sair</button>
-</div>
